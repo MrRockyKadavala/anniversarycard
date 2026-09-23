@@ -1,0 +1,626 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AnniverCard — Template Builder Prototype</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at top,#fff7fa,#ead9df 60%,#d9c0c9);color:#351d29}
+button,input,textarea,select{font:inherit}button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:430px 1fr}
+.sidebar{background:#fff;border-right:1px solid #ead9df;padding:20px;overflow:auto}
+.brand{font-size:23px;font-weight:800}.sub{color:#8d6d79;font-size:13px;margin:4px 0 18px}
+.tabs{display:flex;gap:7px;overflow:auto;padding-bottom:12px}.tab{border:1px solid #ead9df;background:#fff;border-radius:999px;padding:8px 12px;white-space:nowrap}.tab.active{background:#8f3150;color:#fff;border-color:#8f3150}
+.panel{display:none}.panel.active{display:block}.panel h2{font-size:20px;margin:10px 0 4px}.hint{font-size:13px;color:#866c76;margin-bottom:16px}
+.field{margin:13px 0}.field label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#694754}
+input,textarea,select{width:100%;border:1px solid #dfcbd3;border-radius:12px;padding:11px;background:#fff;outline:none}textarea{min-height:110px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.add{width:100%;padding:11px;border:1px dashed #c78da2;background:#fff8fa;color:#8f3150;border-radius:12px;font-weight:700}
+.card{border:1px solid #ead9df;border-radius:16px;padding:12px;margin:12px 0;background:#fff9fb}.cardhead{display:flex;justify-content:space-between;align-items:center}.mini{font-size:12px;color:#8b6b77}
+.actions{display:flex;gap:9px;margin-top:18px}.primary,.secondary{border:0;border-radius:12px;padding:11px 14px;font-weight:700}.primary{background:#8f3150;color:#fff}.secondary{background:#f5e6eb;color:#6f3045}
+.top{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:15px}.top button{border:0;border-radius:10px;padding:9px 12px;background:#f4e2e8;color:#742b45;font-weight:700}
+.stage{display:flex;align-items:center;justify-content:center;padding:28px;background:radial-gradient(circle at 50% 0,#fff,#ead9df);min-height:100vh;overflow:auto}
+.phone{position:relative;width:min(430px,92vw);height:min(850px,92vh);min-height:650px;background:#1c1116;border:10px solid #25181e;border-radius:36px;box-shadow:0 25px 70px #5d334355;overflow:hidden;position:relative}.screen{height:100%;overflow:auto;background:#fff}
+.scene{min-height:100%;padding:28px 22px;position:relative;overflow:hidden}.center{text-align:center}.eyebrow{font-size:11px;letter-spacing:2px;text-transform:uppercase;opacity:.7}.title{font-size:34px;line-height:1.05;margin:10px 0}.gold{color:#d5a34d}.pill{display:inline-block;padding:7px 12px;border-radius:999px;background:#ffffff55;border:1px solid #ffffff66;font-size:12px}
+
+/* Romantic motion layer */
+.scene{isolation:isolate}
+.scene:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 20% 15%,#fff8 0 1px,transparent 2px),radial-gradient(circle at 80% 30%,#fff7 0 1px,transparent 2px),radial-gradient(circle at 55% 75%,#fff6 0 1px,transparent 2px);background-size:95px 120px,130px 150px,170px 180px;animation:twinkle 5s ease-in-out infinite;z-index:1}
+.romantic-content{position:relative;z-index:5}
+.petals-layer{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:4}
+.petalx{position:absolute;top:-35px;width:13px;height:18px;border-radius:80% 20% 80% 20%;background:linear-gradient(135deg,#fff0f5,#e78eaa);box-shadow:0 2px 7px #5d193b33;animation:petalFall linear infinite;transform:rotate(25deg)}
+.petalx:nth-child(3n){width:9px;height:14px;opacity:.8}
+.petalx:nth-child(4n){background:linear-gradient(135deg,#ffe9f0,#c85d7e)}
+.heartx{position:absolute;color:#ffd1df;font-size:18px;animation:heartFloat 7s ease-in-out infinite;filter:drop-shadow(0 5px 8px #4d183333)}
+.sparkx{position:absolute;width:5px;height:5px;border-radius:50%;background:#fff8df;box-shadow:0 0 14px #fff;animation:sparkle 2.8s ease-in-out infinite}
+.romantic-content h1,.romantic-content h2{animation:softRise .9s ease both}
+.romantic-content p{animation:softRise 1.15s ease both}
+@keyframes petalFall{0%{transform:translate3d(0,-40px,0) rotate(0deg);opacity:0}10%{opacity:.95}50%{transform:translate3d(70px,430px,0) rotate(180deg)}100%{transform:translate3d(-45px,900px,0) rotate(390deg);opacity:.05}}
+@keyframes heartFloat{0%{transform:translateY(20px) scale(.7);opacity:0}20%{opacity:.8}50%{transform:translateY(-80px) translateX(20px) scale(1)}100%{transform:translateY(-220px) translateX(-15px) scale(.6);opacity:0}}
+@keyframes sparkle{0%,100%{transform:scale(.3);opacity:.15}50%{transform:scale(1.7);opacity:1}}
+@keyframes twinkle{0%,100%{opacity:.25}50%{opacity:.8}}
+@keyframes softRise{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:none}}
+@keyframes romanticPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
+.romanticHeart{animation:romanticPulse 2.2s ease-in-out infinite;display:inline-block}
+.glassRomance{background:linear-gradient(145deg,#ffffff35,#ffffff12);border:1px solid #ffffff55;box-shadow:0 20px 45px #3e142d25,inset 0 1px #fff8;backdrop-filter:blur(10px);border-radius:24px}
+
+.voice{background:radial-gradient(circle at 50% 20%,#ffe7ef,#6c233c 65%,#210f18);color:white}.heart{font-size:54px;margin:22px}.mic{width:105px;height:105px;border-radius:50%;border:0;background:#fff;color:#8f3150;font-size:38px;box-shadow:0 0 0 12px #ffffff22,0 15px 35px #0005;margin:25px auto}.tiny{font-size:12px;opacity:.75}
+.reveal{background:linear-gradient(#dceeff,#f8d9df 45%,#b7d4a7 72%,#789b66);color:#382c32}.annivBig{font-size:clamp(30px,8.5vw,42px);font-weight:900;line-height:.98;text-shadow:0 5px 0 #ffffff99,0 12px 28px #71374c55;letter-spacing:-2px;margin:18px 0 10px}.reveal-copy{position:absolute;left:18px;right:18px;top:24px;z-index:8;text-align:center}.reveal-copy h2{margin:0;font-size:20px;line-height:1.2}.reveal-copy p{margin:9px 0 0;line-height:1.35}.annivGlow{display:block;max-width:100%;box-sizing:border-box;margin:0 auto;padding:12px 14px;border-radius:22px;background:#ffffff33;backdrop-filter:blur(4px);border:1px solid #fff8}.land{position:absolute;inset:auto 0 0;height:47%;background:linear-gradient(#8eb67b,#547b52);clip-path:polygon(0 30%,15% 14%,28% 31%,42% 8%,55% 28%,68% 12%,82% 29%,100% 5%,100% 100%,0 100%)}.mount{position:absolute;bottom:36%;left:-5%;width:110%;height:32%;background:#8ea4ad;clip-path:polygon(0 100%,18% 38%,30% 63%,48% 5%,66% 60%,82% 28%,100% 100%)}.river{position:absolute;bottom:0;left:40%;width:32%;height:48%;background:#83bfd1;clip-path:polygon(50% 0,70% 18%,56% 38%,80% 60%,100% 100%,10% 100%,34% 65%,18% 43%,38% 20%)}.tree{position:absolute;bottom:31%;width:100px;height:190px;background:#315a39;clip-path:polygon(50% 0,80% 30%,68% 30%,95% 58%,70% 58%,92% 82%,8% 82%,30% 58%,5% 58%,32% 30%,20% 30%)}.tree.l{left:-8%}.tree.r{right:-8%}.house{position:absolute;bottom:36%;right:13%;width:92px;height:67px;background:#8c5b40;border:4px solid #5a382a;border-radius:8px;box-shadow:0 12px 0 -5px #5a382a}.roof{position:absolute;left:-13px;top:-40px;border-left:59px solid transparent;border-right:59px solid transparent;border-bottom:46px solid #70402f}.bunny{position:absolute;bottom:30%;width:62px;height:82px;border-radius:48% 48% 35% 35%;background:#eee8e8;box-shadow:0 8px 0 #d5cccc;animation:bunnyBreath 3s ease-in-out infinite;transform-origin:50% 100%;z-index:4}.bunny.male{animation-delay:.15s}.bunny.female{animation-delay:.45s}.bunny:before,.bunny:after{content:"";position:absolute;top:-50px;width:20px;height:58px;background:inherit;border-radius:70% 70% 20% 20%;z-index:1}.bunny:before{left:7px;transform:rotate(-9deg)}.bunny:after{right:7px;transform:rotate(9deg)}
+.bunny .face{position:absolute;left:7px;right:7px;top:5px;height:40px;z-index:4}
+.bunny .eye{position:absolute;top:13px;width:7px;height:9px;background:#30252b;border-radius:50%}
+.bunny .eye.left{left:10px}.bunny .eye.right{right:10px}
+.bunny .nose{position:absolute;left:50%;top:24px;transform:translateX(-50%);width:9px;height:7px;background:#b87888;border-radius:60% 60% 50% 50%}
+.bunny .mouth{position:absolute;left:50%;top:30px;width:13px;height:7px;transform:translateX(-50%);border-bottom:2px solid #68414d;border-radius:0 0 50% 50%}
+.bunny .earinner{position:absolute;z-index:2;top:-42px;width:9px;height:39px;background:#f3b9ca;border-radius:70% 70% 20% 20%}
+.bunny .earinner.left{left:12px;transform:rotate(-9deg)}.bunny .earinner.right{right:12px;transform:rotate(9deg)}
+.bunny .cheek{position:absolute;top:25px;width:11px;height:6px;background:#efb1bd88;border-radius:50%}
+.bunny .cheek.left{left:2px}.bunny .cheek.right{right:2px}.male{left:31%;background:#e9e4e4}.female{left:52%;background:#f2d8e3}.suit{position:absolute;left:8px;right:8px;bottom:0;height:44px;background:#25252c;border-radius:0 0 22px 22px}.dress{position:absolute;left:-5px;right:-5px;bottom:0;height:50px;background:#e98eaf;border-radius:30px 30px 20px 20px}.flowers{position:absolute;left:5px;bottom:30px;font-size:25px}.bird{position:absolute;top:18%;font-size:24px;animation:fly 6s linear infinite}.b1{left:8%}.b2{left:65%;animation-delay:1.4s}.b3{left:35%;animation-delay:3s}@keyframes fly{50%{transform:translate(55px,22px)}100%{transform:translate(110px,-4px)}}.petal{position:absolute;top:-20px;font-size:17px;animation:fall 7s linear infinite}@keyframes fall{to{transform:translateY(900px) rotate(360deg);opacity:.1}}
+.story{background:radial-gradient(circle at 20% 10%,#fff,#ffe9f1 42%,#f1cbd8);}.story .memory{border:1px solid #efc2d0;box-shadow:0 12px 28px #8d315022}.story .photoGrid img{box-shadow:0 8px 20px #71304725}.mediaGrid{display:grid;gap:10px;margin-top:10px}.mediaItem{border:1px solid #ead9df;border-radius:12px;padding:8px;background:#fff}.mediaItem video,.mediaGrid>video{width:100%;max-height:240px;border-radius:10px;background:#111}.photoGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.photoGrid img{width:100%;height:145px;object-fit:cover;border-radius:14px}.timeline{border-left:2px solid #d7a1b4;margin:20px 0 0 9px;padding-left:18px}.memory{position:relative;background:#fff;border-radius:14px;padding:13px;margin:12px 0;box-shadow:0 5px 18px #7c3d4d18}.memory:before{content:"";position:absolute;left:-25px;top:17px;width:10px;height:10px;border-radius:50%;background:#a64969}
+.quiz{background:radial-gradient(circle at 50% 0,#fff7fa,#ffdce8 45%,#f1b9ca)}.quiz .q{border:1px solid #efc3d1;box-shadow:0 12px 30px #7b355020}.q{background:#fff;border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 7px 20px #7b355016}.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:11px;border:1px solid #e6cbd5;background:#fff7fa;border-radius:11px}
+.letter{background:radial-gradient(circle at 50% 10%,#fffdf5,#f5e5c7 75%,#e9d3a9)}.paper{background:#fffdf6;border-radius:7px;padding:25px 20px;box-shadow:0 12px 30px #51361c20;min-height:75%}.paper p{white-space:pre-wrap;line-height:1.7}
+.final{background:radial-gradient(circle at 50% 30%,#b84f70,#381525 70%);color:#fff}.finalHeart{font-size:75px;animation:pulse 1.8s infinite}@keyframes pulse{50%{transform:scale(1.12)}}@keyframes bunnyBreath{0%,100%{transform:translateY(0) rotate(0deg)}25%{transform:translateY(-2px) rotate(-1deg)}50%{transform:translateY(-6px) rotate(0deg)}75%{transform:translateY(-2px) rotate(1deg)}}@keyframes bunnyLove{0%,100%{transform:translateY(0) scale(1)}50%{transform:translateY(-7px) scale(1.025)}}.surprise-bunny{position:relative;width:100%;height:145px;margin:6px auto 4px}.surprise-bunny .bunny{bottom:8px;transform-origin:50% 100%}.surprise-bunny .male{left:26%;animation:bunnyLove 2.6s ease-in-out infinite}.surprise-bunny .female{left:55%;animation:bunnyLove 2.9s ease-in-out .35s infinite}.surprise-bunny .love{position:absolute;left:50%;top:5px;transform:translateX(-50%);font-size:28px;animation:heartFloat 1.8s ease-in-out infinite;z-index:8}.surprise-bunny .flowerTrail{position:absolute;left:31%;bottom:18px;font-size:22px;letter-spacing:8px;animation:flowerSway 3s ease-in-out infinite;z-index:7}@keyframes heartFloat{0%,100%{transform:translate(-50%,0) scale(.9);opacity:.75}50%{transform:translate(-50%,-10px) scale(1.12);opacity:1}}@keyframes flowerSway{0%,100%{transform:translateX(0) rotate(-2deg)}50%{transform:translateX(5px) rotate(2deg)}}
+.previewBar{position:absolute;left:15px;right:15px;bottom:15px;display:flex;gap:8px}.previewBar button{flex:1;border:0;border-radius:12px;padding:10px;background:#ffffffdd;color:#6f3045;font-weight:700}
+.modal{position:fixed;inset:0;background:#170c1299;display:none;align-items:center;justify-content:center;padding:20px;z-index:100000;pointer-events:auto}.modal.open{display:flex}.modalBox{background:#fff;border-radius:20px;width:min(850px,96vw);height:min(90vh,850px);padding:14px;overflow:auto}.modalHead{display:flex;justify-content:space-between;align-items:center}.modalHead button{border:0;background:#f4e2e8;border-radius:9px;padding:8px}
+@media(max-width:850px){.app{display:block}.sidebar{border-right:0}.stage{display:none}}
+
+.rose-layer{position:absolute;inset:0;pointer-events:none;overflow:hidden;z-index:3}
+.rose{position:absolute;font-size:25px;filter:drop-shadow(0 5px 9px #3d102633);animation:roseDrift 8s ease-in-out infinite}
+.rose.r1{left:5%;top:15%}.rose.r2{left:82%;top:20%;animation-delay:1.2s}.rose.r3{left:15%;top:72%;animation-delay:2.4s}.rose.r4{left:75%;top:70%;animation-delay:3.5s}.rose.r5{left:48%;top:12%;animation-delay:4.2s}
+@keyframes roseDrift{0%,100%{transform:translateY(0) rotate(-8deg) scale(.85);opacity:.45}50%{transform:translateY(-25px) rotate(14deg) scale(1.08);opacity:.95}}
+.replayBtn{display:inline-flex;align-items:center;gap:8px;margin-top:26px;padding:13px 20px;border:1px solid #fff8;border-radius:999px;background:linear-gradient(135deg,#fff,#ffe3ec);color:#7b2949;font-weight:900;box-shadow:0 12px 30px #26081755;animation:romanticPulse 2.4s infinite}
+.intimate{background:linear-gradient(145deg,#ffffff20,#ffffff08);border:1px solid #ffffff55;border-radius:26px;padding:22px;box-shadow:0 20px 50px #21091355,inset 0 1px #fff8;backdrop-filter:blur(12px)}
+
+.receiver-link-card{margin-top:16px;padding:15px;border:1px solid #e8b9cc;border-radius:18px;background:linear-gradient(135deg,#fff7fa,#fff);box-shadow:0 8px 24px #7b174a12}.receiver-link-card p{margin:7px 0 12px}.receiver-link-result{margin-top:10px;word-break:break-all;font-size:12px;color:#7b2949}.receiver-link-result input{width:100%;padding:10px;border:1px solid #e2b3c6;border-radius:10px;background:#fff}.receiver-link-result button{margin-top:8px;width:100%}
+.receiver-only .mobile-phone-top,.receiver-only .mobile-modebar{display:none!important}.receiver-only .mobile-phone{border:0;box-shadow:none}.receiver-only .mobile-builder-shell{background:transparent}
+</style>
+
+<style id="short-link-system-css">
+.setup-banner{margin:10px 12px;padding:12px;border:1px solid #e8b9cc;border-radius:14px;background:#fff7fa;color:#6f3045;font-size:12px;line-height:1.45}
+.setup-banner b{display:block;margin-bottom:4px}
+.short-link-result{margin-top:10px;padding:10px;border-radius:12px;background:#fff0f6;border:1px solid #e4b2c7}
+.short-link-result input{font-size:12px}
+.short-link-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+</style>
+
+<style id="mobile-template-nav-css">
+.mobile-template-nav{display:flex;gap:8px;position:absolute;right:12px;bottom:12px;z-index:9999;pointer-events:auto;background:rgba(18,8,22,.86);backdrop-filter:blur(12px);padding:7px;border-radius:18px;box-shadow:0 10px 30px #0008}
+.mobile-template-nav button{pointer-events:auto;touch-action:manipulation;border:0;border-radius:12px;padding:9px 13px;font-weight:800;font-size:13px;cursor:pointer}
+.mobile-template-nav .prev{background:#fff0f6;color:#8d2456}
+.mobile-template-nav .next{background:#d92f73;color:white}
+.mobile-template-nav button:disabled{opacity:.35;cursor:not-allowed}
+.quiz-lock-note{font-size:12px;text-align:center;margin:8px 14px;color:#ffd5e5}.quiz-correct{outline:2px solid #f3a1bd;border-radius:14px}
+</style>
+<style id="mobile-builder-layer">
+html,body{background:radial-gradient(circle at 50% 0%,#5a1f38,#160914 75%);min-height:100%;margin:0}.mobile-builder-shell{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;box-sizing:border-box}.mobile-phone{width:min(430px,96vw);height:min(900px,94vh);min-height:650px;border:10px solid #171118;border-radius:42px;background:#09070a;box-shadow:0 30px 90px #000b,0 0 0 2px #ffffff18;overflow:hidden;position:relative;display:flex;flex-direction:column}.mobile-phone-top{height:42px;flex:0 0 42px;background:#171018;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 17px;font-weight:900;font-size:13px;box-sizing:border-box}.mobile-live{font-size:10px;color:#ff9fbd;letter-spacing:.8px}.mobile-modebar{display:flex;gap:6px;padding:8px;background:#24131d;border-bottom:1px solid #ffffff12}.modebtn{flex:1;border:0;border-radius:12px;padding:9px 8px;background:#ffffff0d;color:#f7dce6;font-weight:900;cursor:pointer}.modebtn.active{background:#d92f73;color:#fff}.mobile-builder-view,.mobile-card-view{flex:1;min-height:0;overflow:hidden}.mobile-builder-view{display:flex;flex-direction:column;background:#fff5f8;color:#381526}.mobile-progress{font-size:11px;font-weight:900;color:#8b4a61;text-align:center;padding:8px 10px 3px;background:#fff5f8}.mobile-tabs-wrap{overflow-x:auto;background:#fff5f8;border-bottom:1px solid #ead6de;scrollbar-width:none}.mobile-tabs-wrap::-webkit-scrollbar{display:none}.mobile-tabs-wrap .tabs{display:flex;gap:6px;padding:7px 9px;width:max-content}.mobile-tabs-wrap .tab{border:0;border-radius:999px;background:#f2e2e8;color:#71354b;padding:7px 10px;font-size:11px;font-weight:900;white-space:nowrap;cursor:pointer}.mobile-tabs-wrap .tab.active{background:#d92f73;color:#fff}.mobile-builder-view #panels{flex:1;overflow:auto;padding:0 12px 24px;box-sizing:border-box}.mobile-builder-view .panel{padding:13px 2px 30px}.mobile-builder-view h2{font-size:20px;margin:3px 0 7px}.mobile-builder-view .hint{font-size:12px;line-height:1.45}.mobile-builder-view .field label{font-size:11px}.mobile-builder-view input,.mobile-builder-view textarea,.mobile-builder-view select{font-size:13px}.mobile-builder-view .actions{position:sticky;bottom:0;background:linear-gradient(transparent,#fff5f8 25%);padding-top:14px;z-index:4}.mobile-card-view{display:none;background:#100911}.phone-preview-inner{height:100%;position:relative}.phone-preview-inner .screen{height:100%;min-height:0;border-radius:0;overflow:auto}.mobile-card-view .mobile-template-nav{bottom:12px;right:10px}.mobile-card-view .mobile-template-nav button{font-size:11px;padding:8px 10px}@media(max-width:500px){.mobile-builder-shell{padding:0}.mobile-phone{width:100vw;height:100vh;min-height:0;border:0;border-radius:0}.mobile-phone-top{height:48px;flex-basis:48px}}
+</style>
+</head>
+<body>
+<div class="mobile-builder-shell">
+  <div class="mobile-phone">
+    <div class="mobile-phone-top"><span>💌 AnniverCard</span><span class="mobile-live">● LIVE</span></div>
+    <div class="mobile-modebar"><button id="buildModeBtn" class="modebtn active" onclick="showBuildMode()">✍ Build</button><button id="previewModeBtn" class="modebtn" onclick="showCardMode()">👁 Card Preview</button></div>
+    <div id="builderView" class="mobile-builder-view">
+      <div class="mobile-progress" id="mobileProgress"></div>
+<div class="setup-banner" id="setupBanner"><b>🔗 Short-link mode</b><span id="setupBannerText">Checking online card database…</span></div>
+      <div class="mobile-tabs-wrap"><div class="tabs" id="tabs"></div></div>
+      <div id="panels"></div>
+    </div>
+    <div id="cardView" class="mobile-card-view">
+      <div class="phone-preview-inner"><div class="screen" id="preview"></div><div id="mobileTemplateNav" class="mobile-template-nav"><button type="button" class="prev" id="templatePrev" onclick="mobilePrev()">← Previous</button><button type="button" class="next" id="templateNext" onclick="mobileNext()">Next →</button></div></div>
+    </div>
+  </div>
+</div>
+<div class="modal" id="modal" onclick="closeModalBackground(event)"><div class="modalBox" onclick="event.stopPropagation()"><div class="modalHead"><b>👁 Whole-card preview</b><button type="button" onclick="closeModal(event)">Close</button></div><div id="whole"></div></div></div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+const labels=['🎙 Unlock','🐰 Reveal','📸 Story','💕 Quiz','💌 Letter','❤️ Finale','🎁 Surprise'];
+let S={tab:0,name:'My Love',sender:'Your Bunny',opening:'I have a tiny challenge for you…',flirt:['Only you can unlock this.','Say it like you really mean it 😉','Come on, I’m listening…'],phrase:'I love you',
+anniv:'Happy Anniversary ❤️',reveal:'A little surprise for the love of my life.',caption:'Our story begins again…',
+story:'Every moment with you became one of my favourite memories. This is our little world — made from the moments only we understand.',
+photos:[],videos:[],memories:[{date:'2025',title:'The day we met',text:'The beginning of something beautiful.',photo:''}],
+quizTitle:'How well do you know us?',questions:[{type:'multiple',q:'What is my favourite thing about you?',opts:['Your smile','Your kindness','Everything'],ans:2}],
+letterTitle:'To the one I love',letter:'If I could keep one thing forever, it would be the feeling of being with you. Thank you for every laugh, every little moment, and every memory. Happy Anniversary ❤️',
+final:'No matter where life takes us, I want to keep choosing you.',replay:'Replay our story',surpriseTitle:'There’s Another Surprise 💝',surpriseText:'One last little gift, just for you.',voiceNote:'',quizAnswers:{},quizPassed:false};
+
+function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function tabs(){document.getElementById('tabs').innerHTML=labels.map((x,i)=>`<button class="tab ${i===S.tab?'active':''}" onclick="go(${i})">${x}</button>`).join('')}
+function field(label,key,type='input',extra=''){return `<div class="field"><label>${label}</label>${type==='textarea'?`<textarea ${extra} oninput="S.${key}=this.value;render(${S.tab})">${esc(S[key])}</textarea>`:`<input ${extra} value="${esc(S[key])}" oninput="S.${key}=this.value;render(${S.tab})">`}</div>`}
+function panels(){
+const p=[];
+p.push(`<section class="panel ${S.tab===0?'active':''}"><h2>🎙 Voice Unlock</h2><div class="hint">Only ask for what this template needs. The recipient unlocks the next scene by saying the phrase.</div>${field('Recipient name','name')}${field('Sender name','sender')}${field('Opening text','opening','textarea')}${field('Voice phrase','phrase')}<div class="card"><div class="cardhead"><b>Flirty lines</b><span class="mini">${S.flirt.length} added</span></div>${S.flirt.map((x,i)=>`<div class="field"><input value="${esc(x)}" oninput="S.flirt[${i}]=this.value;render(0)"></div>`).join('')}<button class="add" onclick="S.flirt.push('A new flirty line…');render(0)">＋ Add flirty line</button></div><div class="actions"><button class="primary" onclick="go(1)">Save & continue →</button><button class="secondary" onclick="localPreview(0)">Preview template</button></div></section>`);
+p.push(`<section class="panel ${S.tab===1?'active':''}"><h2>🐰 Anniversary Reveal</h2><div class="hint">This scene is the cinematic bridge between the voice challenge and your story.</div>${field('Anniversary heading','anniv')}${field('Reveal message','reveal','textarea')}${field('Small caption','caption') }<div class="actions"><button class="secondary" onclick="go(0)">← Back</button><button class="primary" onclick="go(2)">Save & continue →</button><button class="secondary" onclick="localPreview(1)">Preview</button></div></section>`);
+p.push(`<section class="panel ${S.tab===2?'active':''}"><h2>📸 Our Story + Memories</h2><div class="hint">Add your story first, then add photos and memories only when you want them.</div>${field('Our story','story','textarea')}<div class="card"><div class="cardhead"><b>📸 Photos</b><span class="mini">${S.photos.length} added</span></div><input type="file" accept="image/*" multiple onchange="addPhotos(this.files)"><div class="photoGrid">${S.photos.map((x,i)=>`<div style="position:relative"><img src="${x}"><button class="secondary" type="button" style="position:absolute;right:4px;top:4px;padding:5px 8px" onclick="removePhoto(${i})">✕</button></div>`).join('')}</div></div>
+<div class="card"><div class="cardhead"><b>🎥 Videos</b><span class="mini">${S.videos.length} added</span></div><div class="hint">Add short memory videos directly from your gallery.</div><input type="file" accept="video/*" multiple onchange="addVideos(this.files)"><div class="mediaGrid">${S.videos.map((x,i)=>`<div class="mediaItem"><video src="${x}" controls playsinline></video><button class="add" type="button" onclick="removeVideo(${i})">🗑 Remove video</button></div>`).join('')}</div></div><div class="card"><div class="cardhead"><b>Memories</b><span class="mini">${S.memories.length} added</span></div>${S.memories.map((m,i)=>`<div class="card"><div class="row"><div class="field"><label>Date / year</label><input value="${esc(m.date)}" oninput="S.memories[${i}].date=this.value;render(2)"></div><div class="field"><label>Title</label><input value="${esc(m.title)}" oninput="S.memories[${i}].title=this.value;render(2)"></div></div><div class="field"><label>Description</label><textarea oninput="S.memories[${i}].text=this.value;render(2)">${esc(m.text)}</textarea></div><div class="field"><label>Memory photo (optional)</label><input type="file" accept="image/*" onchange="addMemoryPhoto(this.files,${i})"></div></div>`).join('')}<button class="add" onclick="S.memories.push({date:'',title:'',text:'',photo:''});render(2)">＋ Add a memory</button></div><div class="actions"><button class="secondary" onclick="go(1)">← Back</button><button class="primary" onclick="go(3)">Save & continue →</button><button class="secondary" onclick="localPreview(2)">Preview</button></div></section>`);
+p.push(`<section class="panel ${S.tab===3?'active':''}"><h2>💕 Love Quiz</h2><div id="quizLockMessage" class="quiz-lock-note">Answer every question correctly to unlock the next template.</div><div class="hint">Create one question at a time. Pick a type and add only the fields that type needs.</div>${field('Quiz title','quizTitle')}<div class="card">${S.questions.map((q,i)=>`<div class="card"><div class="cardhead"><b>Question ${i+1}</b><button class="secondary" onclick="S.questions.splice(${i},1);render(3)">Remove</button></div><div class="field"><label>Question type</label><select onchange="S.questions[${i}].type=this.value;render(3)"><option value="multiple" ${q.type==='multiple'?'selected':''}>Multiple Choice</option><option value="truefalse" ${q.type==='truefalse'?'selected':''}>True / False</option><option value="blank" ${q.type==='blank'?'selected':''}>Fill in the Blank</option><option value="short" ${q.type==='short'?'selected':''}>Short Answer</option></select></div><div class="field"><label>Question</label><textarea oninput="S.questions[${i}].q=this.value;render(3)">${esc(q.q)}</textarea></div>${q.type==='multiple'?`<div class="field"><label>Answers (one per line)</label><textarea oninput="S.questions[${i}].opts=this.value.split('\\n');render(3)">${esc((q.opts||[]).join('\\n'))}</textarea></div><div class="field"><label>Correct answer number</label><input type="number" min="1" value="${(q.ans||0)+1}" oninput="S.questions[${i}].ans=Number(this.value)-1;render(3)"></div>`:q.type==='truefalse'?`<div class="field"><label>Correct answer</label><select onchange="S.questions[${i}].ans=this.value;render(3)"><option ${q.ans==='true'?'selected':''}>true</option><option ${q.ans==='false'?'selected':''}>false</option></select></div>`:`<div class="field"><label>Expected answer</label><input value="${esc(q.ans||'')}" oninput="S.questions[${i}].ans=this.value;render(3)"></div>`}</div>`).join('')}<button class="add" onclick="S.questions.push({type:'multiple',q:'',opts:['',''],ans:0});render(3)">＋ Add question</button></div><div class="actions"><button class="secondary" onclick="go(2)">← Back</button><button class="primary" onclick="go(4)">Save & continue →</button><button class="secondary" onclick="localPreview(3)">Preview</button></div></section>`);
+p.push(`<section class="panel ${S.tab===4?'active':''}"><h2>💌 Personal Letter</h2><div class="hint">Just the heading and your letter. Nothing else.</div>${field('Letter heading','letterTitle')}${field('Your letter','letter','textarea')}<div class="actions"><button class="secondary" onclick="go(3)">← Back</button><button class="primary" onclick="go(5)">Save & continue →</button><button class="secondary" onclick="localPreview(4)">Preview</button></div></section>`);
+p.push(`<section class="panel ${S.tab===5?'active':''}"><h2>❤️ Final Scene</h2><div class="hint">The last message the recipient sees.</div>${field('Final message','final','textarea')}<div class="actions"><button class="secondary" onclick="go(4)">← Back</button><button class="primary" onclick="go(6)">Save & continue →</button><button class="secondary" onclick="localPreview(5)">Preview</button></div></section>`);
+p.push(`<section class="panel ${S.tab===6?'active':''}">
+<h2>🎁 Another Surprise</h2>
+<div class="hint">This is the next template after the Final Message. Add everything for this scene here, just like the other templates.</div>
+${field('Surprise heading','surpriseTitle')}
+${field('Surprise message','surpriseText','textarea')}
+<div class="card">
+<div class="cardhead"><b>🎙️ Voice message</b><span class="mini">${S.voiceNote?'Added':'Not added'}</span></div>
+<div class="hint">Record your personal message here. The recording is saved into this card and will be playable by the recipient in this template.</div>
+<div class="row" style="margin-top:12px">
+<button class="primary" onclick="startRecording()">🔴 Start recording</button>
+<button class="secondary" onclick="stopRecording()">⏹ Stop</button>
+</div>
+<div id="recordTimer" class="mini" style="margin-top:8px">00:00</div>
+<div id="recordStatus" class="mini" style="margin-top:6px">${S.voiceNote?'✅ Voice message added.':'No voice message added yet.'}</div>
+${S.voiceNote?`<audio controls src="${S.voiceNote}" style="width:100%;margin-top:10px"></audio><button class="add" style="margin-top:8px" onclick="removeVoice()">🗑 Remove voice message</button>`:''}
+<div class="field"><label>Or upload an existing voice recording</label><input type="file" accept="audio/*" onchange="addVoiceNote(this.files)"></div>
+</div>
+<div class="card">
+<div class="cardhead"><b>🎵 Background music</b><span class="mini">${S.backgroundMusic?'Added':'Optional'}</span></div>
+<div class="hint">Add one music track for the final surprise. The receiver can press Play; browsers may block automatic playback until the receiver interacts with the page.</div>
+<div class="field"><input type="file" accept="audio/*" onchange="addBackgroundMusic(this.files)"></div>
+${S.backgroundMusic?`<audio controls src="${S.backgroundMusic}" style="width:100%"></audio><button class="add" style="margin-top:8px" onclick="removeBackgroundMusic()">🗑 Remove music</button>`:''}
+</div>
+<div class="receiver-link-card">
+  <b>🔗 Ready to send?</b>
+  <p class="hint">Save this card online and create a short receiver link. The receiver opens only the finished card.</p>
+  <button class="primary" type="button" onclick="generateReceiverLink()">🔗 Generate short receiver link</button>
+  <div id="receiverLinkResult" class="receiver-link-result"></div>
+</div>
+<div class="actions">
+<button class="secondary" onclick="go(5)">← Back</button>
+<button class="primary" onclick="wholePreview()">👁 Preview whole card</button>
+<button class="secondary" onclick="localPreview(6)">Preview this template</button>
+</div>
+</section>`);
+document.getElementById('panels').innerHTML=p.join('')}
+function go(i){
+  i=Math.max(0,Math.min(6,Number(i)||0));
+  S.tab=i;
+  tabs();
+  panels();
+  render(i);
+  updateMobileProgress();
+  updateRecipientNav();
+  requestAnimationFrame(()=>{
+    const screen=document.querySelector('.screen');
+    if(screen)screen.scrollTo({top:0,behavior:'auto'});
+    updateRecipientNav();
+  });
+}
+function replayStory(){S.tab=0;tabs();panels();render(0);updateMobileProgress();requestAnimationFrame(()=>{const screen=document.querySelector('.screen');if(screen)screen.scrollTo({top:0,behavior:'auto'});})}
+function addPhotos(files){[...files].forEach(f=>{let r=new FileReader();r.onload=e=>{S.photos.push(e.target.result);render(2);panels()};r.readAsDataURL(f)})}
+function removePhoto(i){S.photos.splice(i,1);render(2);panels()}
+function addVideos(files){[...files].forEach(f=>{if(!f.type.startsWith('video/'))return;let r=new FileReader();r.onload=e=>{S.videos.push(e.target.result);render(2);panels()};r.readAsDataURL(f)})}
+function removeVideo(i){S.videos.splice(i,1);render(2);panels()}
+function addBackgroundMusic(files){const f=files&&files[0];if(!f)return;if(!f.type.startsWith('audio/')){alert('Please choose an audio file.');return}const r=new FileReader();r.onload=e=>{S.backgroundMusic=e.target.result;render(6);panels()};r.readAsDataURL(f)}
+function removeBackgroundMusic(){S.backgroundMusic='';render(6);panels()}
+function addMemoryPhoto(files,i){let f=files[0];if(!f)return;let r=new FileReader();r.onload=e=>{S.memories[i].photo=e.target.result;render(2);panels()};r.readAsDataURL(f)}
+function petals(n=18){return Array.from({length:n},(_,i)=>`<span class="petal" style="left:${(i*37)%100}%;animation-delay:${(i%9)*.45}s">🌸</span>`).join('')}
+function romanceDecor(){
+  let p='';
+  for(let i=0;i<28;i++)p+=`<span class="petalx" style="left:${(i*37)%101}%;animation-duration:${6+(i%6)}s;animation-delay:${-(i%8)*.7}s"></span>`;
+  for(let i=0;i<9;i++)p+=`<span class="heartx" style="left:${(i*43)%100}%;top:${20+(i*17)%70}%;animation-delay:${-(i%7)}s">♥</span>`;
+  for(let i=0;i<14;i++)p+=`<span class="sparkx" style="left:${(i*53)%100}%;top:${8+(i*29)%88}%;animation-delay:${-(i%9)*.3}s"></span>`;
+  return `<div class="petals-layer">${p}</div>`;
+}
+
+
+function roseDecor(){
+ return `<div class="rose-layer"><span class="rose r1">🌹</span><span class="rose r2">🌹</span><span class="rose r3">🌹</span><span class="rose r4">🌹</span><span class="rose r5">🌹</span></div>`;
+}
+
+function resetQuizState(){
+  S.quizAnswers = {};
+  S.quizPassed = false;
+}
+function normalizeQuizAnswer(v){
+  return String(v??'').trim().toLowerCase().replace(/\s+/g,' ');
+}
+function answerQuiz(qi, value){
+  const q=S.questions[qi];
+  if(!q)return;
+  let correct=false;
+  if(q.type==='multiple'){
+    correct=Number(value)===Number(q.ans);
+  }else if(q.type==='truefalse'){
+    correct=String(value).toLowerCase()===String(q.ans).toLowerCase();
+  }else{
+    correct=normalizeQuizAnswer(value)===normalizeQuizAnswer(q.ans);
+  }
+  S.quizAnswers=S.quizAnswers||{};
+  S.quizAnswers[qi]=correct;
+  S.quizPassed=S.questions.length>0 && S.questions.every((_,i)=>S.quizAnswers[i]===true);
+  const feedback=document.getElementById('quizFeedback'+qi);
+  if(feedback) feedback.textContent=correct?'❤️ Correct!':'Not quite — try again.';
+  const qbox=document.querySelector('.q[data-q="'+qi+'"]');
+  if(qbox) qbox.classList.toggle('quiz-correct',correct);
+  const status=document.getElementById('quizStatus');
+  if(status) status.textContent=S.quizPassed?'❤️ All correct — you may continue.':'Answer every question correctly to continue.';
+  updateRecipientNav();
+}
+function updateRecipientNav(){
+  const nav=document.getElementById('mobileTemplateNav');
+  const prev=document.getElementById('templatePrev');
+  const next=document.getElementById('templateNext');
+  if(!nav||!prev||!next)return;
+  const i=Number(S.tab)||0;
+  nav.style.display='flex';
+  nav.style.pointerEvents='auto';
+  prev.disabled=i===0;
+  if(i===3){
+    next.disabled=S.quizPassed!==true;
+    next.textContent=S.quizPassed===true?'Next →':'Locked 🔒';
+  }else if(i===6){
+    next.disabled=true;
+    next.textContent='End';
+  }else{
+    next.disabled=false;
+    next.textContent='Next →';
+  }
+}
+function mobilePrev(){
+  const i=Number(S.tab)||0;
+  if(i>0) go(i-1);
+}
+function mobileNext(){
+  const i=Number(S.tab)||0;
+  if(i<0 || i>=6)return;
+  if(i===3 && S.quizPassed!==true)return;
+  const nextIndex=i+1;
+  S.tab=nextIndex;
+  // One transition path only: update state, switch to card mode, then render.
+  showCardMode();
+  requestAnimationFrame(()=>{
+    const screen=document.getElementById('preview');
+    if(screen){screen.scrollTop=0;screen.scrollLeft=0;}
+    updateMobileProgress();
+    updateRecipientNav();
+  });
+}
+
+function render(i){
+let h='';
+if(i===0)h=`<div class="scene voice center">${romanceDecor()}${roseDecor()}<div class="romantic-content"><div class="eyebrow">A tiny challenge for</div><div class="title">${esc(S.name)}</div><div class="heart">💗</div><p>${esc(S.opening)}</p>${S.flirt.map(x=>`<div class="pill" style="margin:4px">${esc(x)}</div>`).join('')}<button class="mic" id="voiceMic" onclick="startVoice()">🎙️</button><div class="tiny" id="voiceStatus">Tap the mic, then say: “${esc(S.phrase)}”</div></div></div></div>`;
+if(i===1)h=`<div class="scene reveal">${romanceDecor()}${roseDecor()}${petals(10)}<div class="reveal-copy"><div class="annivGlow"><div class="annivBig">${esc(S.anniv)}</div><h2>${esc(S.reveal)}</h2><p>${esc(S.caption)}</p></div></div><div class="mount"></div><div class="land"></div><div class="river"></div><div class="tree l"></div><div class="tree r"></div><div class="house"><div class="roof"></div></div><div class="bird b1">🕊️</div><div class="bird b2">🕊️</div><div class="bird b3">🕊️</div><div class="bunny male"><div class="earinner left"></div><div class="earinner right"></div><div class="face"><i class="eye left"></i><i class="eye right"></i><i class="nose"></i><i class="mouth"></i><i class="cheek left"></i><i class="cheek right"></i></div><div class="suit"></div><div class="flowers">💐</div></div><div class="bunny female"><div class="earinner left"></div><div class="earinner right"></div><div class="face"><i class="eye left"></i><i class="eye right"></i><i class="nose"></i><i class="mouth"></i><i class="cheek left"></i><i class="cheek right"></i></div><div class="dress"></div></div></div>`;
+
+if(i===2)h=`<div class="scene story">${romanceDecor()}${roseDecor()}<div class="romantic-content">${petals(12)}<div class="center" style="position:relative"><div class="eyebrow">Our story</div><h1>${esc(S.name)} & ${esc(S.sender)}</h1><p>${esc(S.story)}</p></div><div class="photoGrid">${S.photos.map(x=>`<img src="${x}">`).join('')}</div>${S.videos?.length?`<div class="mediaGrid" style="margin-top:14px">${S.videos.map(x=>`<video src="${x}" controls playsinline></video>`).join('')}</div>`:''}<div class="timeline">${S.memories.map(m=>`<div class="memory"><b>${esc(m.date)} · ${esc(m.title)}</b><p>${esc(m.text)}</p>${m.photo?`<img src="${m.photo}" style="width:100%;border-radius:10px">`:''}</div>`).join('')}</div></div></div>`;
+if(i===3)h=`<div class="scene quiz">${romanceDecor()}${roseDecor()}<div class="romantic-content">${petals(8)}<div class="center"><div class="eyebrow">Just for us</div><h1>${esc(S.quizTitle)}</h1><p id="quizStatus" class="pill">${S.quizPassed?'❤️ All correct — you may continue.':'Answer every question correctly to continue.'}</p></div>${S.questions.map((q,qi)=>`<div class="q" data-q="${qi}"><b>${qi+1}. ${esc(q.q)}</b>${q.type==='multiple'?(q.opts||[]).map((o,j)=>`<button class="opt" data-quiz-q="${qi}" data-quiz-a="${j}" onclick="answerQuiz(${qi},${j})">${esc(o||'Option')}</button>`).join(''):q.type==='truefalse'?`<button class="opt" data-quiz-q="${qi}" data-quiz-a="true" onclick="answerQuiz(${qi},'true')">True</button><button class="opt" data-quiz-q="${qi}" data-quiz-a="false" onclick="answerQuiz(${qi},'false')">False</button>`:`<input id="quizInput${qi}" placeholder="Your answer…" onkeydown="if(event.key==='Enter')answerQuiz(${qi},this.value)"> <button class="opt" style="margin-top:8px" onclick="answerQuiz(${qi},document.getElementById('quizInput${qi}').value)">Check answer</button>`}<div id="quizFeedback${qi}" class="tiny" style="margin-top:8px"></div></div>`).join('')}</div></div>`;
+if(i===4)h=`<div class="scene letter">${romanceDecor()}${roseDecor()}<div class="romantic-content"><div class="paper"><div class="eyebrow">A letter for you</div><h1>${esc(S.letterTitle)}</h1><p>${esc(S.letter)}</p><div style="text-align:right;font-size:30px">♡</div></div></div></div>`;
+if(i===5)h=`<div class="scene final center">${romanceDecor()}${roseDecor()}<div class="romantic-content"><div style="padding-top:20%"><div class="finalHeart">❤️</div><div class="eyebrow">Always</div><h1>${esc(S.final)}</h1><p>Happy Anniversary, ${esc(S.name)}.</p></div></div></div>`;
+if(i===6)h=`<div class="scene final center">${romanceDecor()}${roseDecor()}<div class="romantic-content"><div style="padding-top:7%"><div class="finalHeart">🎁</div><div class="surprise-bunny"><div class="love">💗</div><div class="bunny male"><div class="earinner left"></div><div class="earinner right"></div><div class="face"><i class="eye left"></i><i class="eye right"></i><i class="nose"></i><i class="mouth"></i><i class="cheek left"></i><i class="cheek right"></i></div><div class="suit"></div><div class="flowers">💐</div></div><div class="bunny female"><div class="earinner left"></div><div class="earinner right"></div><div class="face"><i class="eye left"></i><i class="eye right"></i><i class="nose"></i><i class="mouth"></i><i class="cheek left"></i><i class="cheek right"></i></div><div class="dress"></div></div><div class="flowerTrail">🌹 🌹 🌹</div></div><div class="eyebrow">One last secret</div><h1>${esc(S.surpriseTitle)}</h1><p>${esc(S.surpriseText)}</p>${S.voiceNote?`<div class="card" style="background:#ffffff18;border:1px solid #ffffff44;color:#fff;margin-top:25px"><div style="font-size:38px">🎙️</div><b>A message from me, just for you</b><p style="font-size:13px;opacity:.85">Tap Play to hear my voice while viewing this surprise ❤️</p><audio controls src="${S.voiceNote}" style="width:100%;margin-top:12px"></audio></div>`:'<div class="pill" style="margin-top:20px">The voice message will appear here after the creator adds one.</div>'}${S.backgroundMusic?`<div class="card" style="background:#ffffff18;border:1px solid #ffffff44;color:#fff;margin-top:14px"><div style="font-size:28px">🎵</div><b>Our song</b><audio controls src="${S.backgroundMusic}" style="width:100%;margin-top:12px"></audio></div>`:''}<button class="primary" type="button" style="margin-top:22px" onclick="replayStory()">↺ ${esc(S.replay||'Replay our story')}</button></div></div>`;
+document.getElementById('preview').innerHTML=h}
+function localPreview(i){S.tab=i;render(i);alert('This is the live template preview. The phone on the right shows exactly what the recipient will see for this scene.')}
+function wholePreview(){
+  const preview=document.getElementById('preview');
+  const whole=document.getElementById('whole');
+  if(!preview||!whole)return;
+  const savedHTML=preview.innerHTML;
+  const savedTab=S.tab;
+  const savedMode=document.getElementById('cardView')?.style.display||'';
+  const scenes=[];
+  try{
+    for(let i=0;i<7;i++){
+      render(i);
+      scenes.push(preview.innerHTML || '');
+    }
+  }finally{
+    S.tab=savedTab;
+    preview.innerHTML=savedHTML;
+    if(document.getElementById('cardView'))document.getElementById('cardView').style.display=savedMode;
+    tabs(); panels(); updateMobileProgress(); updateRecipientNav();
+  }
+  whole.innerHTML=scenes.map((scene,i)=>`<div style="height:650px;margin:10px 0;border-radius:16px;overflow:hidden;border:1px solid #ead9df"><div style="height:100%;overflow:auto">${scene || '<div style="padding:20px">Template '+(i+1)+' is empty.</div>'}</div></div>`).join('');
+  document.getElementById('modal').classList.add('open');
+}
+function sceneHTML(i){
+  const preview=document.getElementById('preview');
+  if(!preview)return '';
+  const savedHTML=preview.innerHTML;
+  const savedTab=S.tab;
+  try{render(i);return preview.innerHTML || '';}
+  finally{S.tab=savedTab;preview.innerHTML=savedHTML;}
+}
+function closeModal(ev){if(ev){ev.preventDefault();ev.stopPropagation();ev.stopImmediatePropagation()}const modal=document.getElementById('modal');if(modal){modal.classList.remove('open');modal.setAttribute('aria-hidden','true')}return false}
+function closeModalBackground(ev){if(ev && ev.target===ev.currentTarget)closeModal(ev)}
+
+let recognition=null;
+function startVoice(){
+  const status=document.getElementById('voiceStatus');
+  const mic=document.getElementById('voiceMic');
+  if(!('webkitSpeechRecognition' in window || 'SpeechRecognition' in window)){
+    if(status)status.textContent='Voice recognition is not supported. Please use Chrome or Edge.';
+    return;
+  }
+  const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+  recognition=new SR();
+  recognition.lang='en-US';
+  recognition.interimResults=false;
+  recognition.continuous=false;
+  recognition.maxAlternatives=5;
+  if(status)status.textContent='Listening… say “'+S.phrase+'” ❤️';
+  if(mic)mic.textContent='🔴';
+  recognition.onresult=e=>{
+    const heard=Array.from(e.results[0]).map(x=>x.transcript).join(' ').toLowerCase().trim();
+    const target=S.phrase.toLowerCase().trim();
+    const normalize=s=>s.replace(/[.,!?']/g,'').replace(/\s+/g,' ');
+    const h=normalize(heard), t=normalize(target);
+    if(h===t || h.includes(t) || t.includes(h)){
+      if(status)status.textContent='❤️ Recognised! Opening the anniversary reveal…';
+      if(mic)mic.textContent='💖';
+      recognition.stop();
+      setTimeout(()=>{ S.tab=1; showCardMode(); updateMobileProgress(); updateRecipientNav(); requestAnimationFrame(()=>{const screen=document.getElementById('preview'); if(screen){screen.scrollTop=0;screen.scrollLeft=0;} updateRecipientNav();}); },450);
+    }else{
+      if(status)status.textContent='I heard “'+heard+'”. Try again.';
+      if(mic)mic.textContent='🎙️';
+    }
+  };
+  recognition.onerror=e=>{
+    if(status)status.textContent=e.error==='not-allowed'?'Microphone permission was blocked. Allow it and try again.':'I could not hear that clearly. Try again.';
+    if(mic)mic.textContent='🎙️';
+  };
+  recognition.onend=()=>{ if(mic && mic.textContent==='🔴')mic.textContent='🎙️'; };
+  try{recognition.start()}catch(e){}
+}
+
+
+let mediaRecorder=null,recordedChunks=[],recordTimerInterval=null,recordStartedAt=0;
+async function startRecording(){
+ if(!navigator.mediaDevices?.getUserMedia){alert('Use Chrome or Edge for microphone recording.');return}
+ try{
+  const stream=await navigator.mediaDevices.getUserMedia({audio:true});
+  recordedChunks=[]; mediaRecorder=new MediaRecorder(stream);
+  mediaRecorder.ondataavailable=e=>{if(e.data.size)recordedChunks.push(e.data)};
+  mediaRecorder.onstop=()=>{stream.getTracks().forEach(t=>t.stop());const blob=new Blob(recordedChunks,{type:mediaRecorder.mimeType||'audio/webm'});const r=new FileReader();r.onload=e=>{S.voiceNote=e.target.result;clearInterval(recordTimerInterval);render(6);panels()};r.readAsDataURL(blob)};
+  mediaRecorder.start();recordStartedAt=Date.now();
+  recordTimerInterval=setInterval(()=>{const s=Math.floor((Date.now()-recordStartedAt)/1000),el=document.getElementById('recordTimer');if(el)el.textContent=String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')},250);
+  const st=document.getElementById('recordStatus');if(st)st.textContent='🔴 Recording… speak your message.';
+ }catch(e){alert('Microphone permission was not allowed. Please allow it and try again.')}
+}
+function stopRecording(){if(mediaRecorder?.state==='recording'){mediaRecorder.stop();clearInterval(recordTimerInterval);const st=document.getElementById('recordStatus');if(st)st.textContent='Processing your voice message…'}}
+function removeVoice(){S.voiceNote='';render(6);panels()}
+function addVoiceNote(files){
+ const f=files&&files[0]; if(!f)return;
+ if(!f.type.startsWith('audio/')){alert('Please choose an audio file.');return}
+ const r=new FileReader();r.onload=e=>{S.voiceNote=e.target.result;render(6);panels()};r.readAsDataURL(f);
+}
+
+/* =========================
+   SHORT-LINK CARD SYSTEM
+   ========================= */
+const ANNIVERCARD_CONFIG = {
+  // Fill these two values from your Supabase project.
+  // Never put a Supabase service-role key here. Use the anon/public key only.
+  SUPABASE_URL: 'PASTE_YOUR_SUPABASE_PROJECT_URL_HERE',
+  SUPABASE_ANON_KEY: 'PASTE_YOUR_SUPABASE_ANON_KEY_HERE',
+  TEMPLATE_SLUG: 'anniversary'
+};
+
+let supabaseClient = null;
+
+function supabaseReady(){
+  return ANNIVERCARD_CONFIG.SUPABASE_URL.startsWith('http')
+    && !ANNIVERCARD_CONFIG.SUPABASE_URL.includes('PASTE_')
+    && ANNIVERCARD_CONFIG.SUPABASE_ANON_KEY.length > 20
+    && !ANNIVERCARD_CONFIG.SUPABASE_ANON_KEY.includes('PASTE_');
+}
+
+function getSupabase(){
+  if(!supabaseReady() || !window.supabase) return null;
+  if(!supabaseClient){
+    supabaseClient = window.supabase.createClient(
+      ANNIVERCARD_CONFIG.SUPABASE_URL,
+      ANNIVERCARD_CONFIG.SUPABASE_ANON_KEY
+    );
+  }
+  return supabaseClient;
+}
+
+function randomShortId(len=7){
+  const alphabet='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
+  const bytes=new Uint8Array(len);
+  crypto.getRandomValues(bytes);
+  let s='';
+  for(const b of bytes)s+=alphabet[b%alphabet.length];
+  return s;
+}
+
+function getAppBase(){
+  const p=location.pathname;
+  if(p.endsWith('/index.html')) return location.origin + p.slice(0,-10);
+  if(p.endsWith('/')) return location.origin + p.slice(0,-1);
+  const i=p.lastIndexOf('/');
+  return location.origin + (i>=0?p.slice(0,i):'');
+}
+
+function buildReceiverUrl(id){
+  return getAppBase() + '/c/' + encodeURIComponent(id);
+}
+
+function buildTemplateUrl(){
+  return getAppBase() + '/t/' + ANNIVERCARD_CONFIG.TEMPLATE_SLUG;
+}
+
+function dataUrlToBlob(dataUrl){
+  const parts=dataUrl.split(',');
+  const mime=(parts[0].match(/:(.*?);/)||[])[1] || 'application/octet-stream';
+  const bin=atob(parts[1]||'');
+  const arr=new Uint8Array(bin.length);
+  for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i);
+  return new Blob([arr],{type:mime});
+}
+
+async function uploadDataUrl(client, dataUrl, folder, ext='bin'){
+  if(!dataUrl || !dataUrl.startsWith('data:')) return dataUrl;
+  const blob=dataUrlToBlob(dataUrl);
+  const safeExt = (blob.type.split('/')[1] || ext).replace(/[^a-z0-9]/gi,'').slice(0,8) || ext;
+  const path=folder+'/'+crypto.randomUUID()+'.'+safeExt;
+  const {error}=await client.storage.from('card-media').upload(path, blob, {
+    contentType:blob.type,
+    upsert:false
+  });
+  if(error) throw error;
+  const {data}=client.storage.from('card-media').getPublicUrl(path);
+  return data.publicUrl;
+}
+
+async function prepareOnlinePayload(client, cardId){
+  const payload=JSON.parse(JSON.stringify({...S,tab:0,quizAnswers:{},quizPassed:false}));
+  payload.photos=await Promise.all((payload.photos||[]).map(x=>uploadDataUrl(client,x,cardId,'jpg')));
+  payload.videos=await Promise.all((payload.videos||[]).map(x=>uploadDataUrl(client,x,cardId,'mp4')));
+  payload.memories=await Promise.all((payload.memories||[]).map(async m=>({
+    ...m,
+    photo: await uploadDataUrl(client,m.photo,cardId,'jpg')
+  })));
+  payload.voiceNote=await uploadDataUrl(client,payload.voiceNote,cardId,'webm');
+  payload.backgroundMusic=await uploadDataUrl(client,payload.backgroundMusic,cardId,'mp3');
+  return payload;
+}
+
+async function createOnlineCard(){
+  const client=getSupabase();
+  if(!client){
+    throw new Error('Supabase is not configured yet. Open SETUP.md and add the project URL and anon key to this HTML file.');
+  }
+
+  let id='';
+  let lastError=null;
+
+  for(let attempt=0;attempt<5;attempt++){
+    id=randomShortId(7);
+    const payload=await prepareOnlinePayload(client,id);
+    const {error}=await client.from('cards').insert({
+      id,
+      template_slug:ANNIVERCARD_CONFIG.TEMPLATE_SLUG,
+      payload
+    });
+    if(!error) return id;
+    lastError=error;
+    if(!String(error.message||'').toLowerCase().includes('duplicate')) break;
+  }
+  throw lastError || new Error('Could not create the card.');
+}
+
+async function generateReceiverLink(){
+  const result=document.getElementById('receiverLinkResult');
+  if(!result)return;
+
+  result.innerHTML='<div class="mini">⏳ Saving your card and uploading photos/audio…</div>';
+
+  try{
+    const id=await createOnlineCard();
+    const link=buildReceiverUrl(id);
+    result.innerHTML=`
+      <div class="short-link-result">
+        <b>❤️ Your card is online</b>
+        <input id="receiverLinkInput" readonly value="${esc(link)}">
+        <div class="short-link-actions">
+          <button class="secondary" type="button" onclick="copyReceiverLink()">📋 Copy</button>
+          <button class="primary" type="button" onclick="shareReceiverLink()">📤 Share</button>
+        </div>
+        <div class="mini" style="margin-top:7px">Short receiver ID: <b>${esc(id)}</b></div>
+      </div>`;
+  }catch(e){
+    console.error(e);
+    result.innerHTML=`<div class="short-link-result">❌ ${esc(e.message||'Could not create the link.')}</div>`;
+  }
+}
+
+async function copyReceiverLink(){
+  const input=document.getElementById('receiverLinkInput');
+  if(!input)return;
+  try{
+    await navigator.clipboard.writeText(input.value);
+    const b=document.querySelector('#receiverLinkResult button');
+    if(b)b.textContent='✓ Copied';
+  }catch(e){
+    input.select();
+    document.execCommand('copy');
+  }
+}
+
+async function shareReceiverLink(){
+  const input=document.getElementById('receiverLinkInput');
+  if(!input)return;
+  if(navigator.share){
+    try{await navigator.share({title:'A love card ❤️',url:input.value});}catch(e){}
+  }else{
+    copyReceiverLink();
+  }
+}
+
+function pathParts(){
+  return location.pathname.split('/').filter(Boolean);
+}
+
+async function enterReceiverMode(){
+  const parts=pathParts();
+  const cardIndex=parts.indexOf('c');
+  const templateIndex=parts.indexOf('t');
+
+  // /t/anniversary opens the creator customizer.
+  if(templateIndex>=0){
+    document.body.classList.remove('receiver-only');
+    return false;
+  }
+
+  if(cardIndex<0 || !parts[cardIndex+1]) return false;
+
+  const id=decodeURIComponent(parts[cardIndex+1]);
+  const client=getSupabase();
+  if(!client){
+    document.body.innerHTML='<div style="font-family:system-ui;padding:30px;max-width:600px;margin:auto"><h2>Card setup required</h2><p>The card database is not configured yet.</p></div>';
+    return true;
+  }
+
+  try{
+    const {data,error}=await client.from('cards').select('payload').eq('id',id).single();
+    if(error) throw error;
+    if(!data?.payload) throw new Error('This card link does not exist.');
+
+    S={...S,...data.payload,tab:0,quizAnswers:{},quizPassed:false};
+    document.body.classList.add('receiver-only');
+    const builder=document.getElementById('builderView'),card=document.getElementById('cardView');
+    if(builder)builder.style.display='none';
+    if(card)card.style.display='block';
+    render(0); updateMobileProgress(); updateRecipientNav();
+    return true;
+  }catch(e){
+    document.body.innerHTML='<div style="font-family:system-ui;padding:30px;max-width:600px;margin:auto;text-align:center"><h2>💔 Card not found</h2><p>This short link is invalid or the card has been removed.</p></div>';
+    return true;
+  }
+}
+
+function loadDemo(){S={...S,name:'Ananya',sender:'Rohan',opening:'Before you enter our story, prove one little thing…',flirt:['Only my favourite person gets through.','Say it softly.','Yes… exactly like that 😉'],phrase:'I love you',anniv:'Happy Anniversary, Ananya ❤️',reveal:'For the girl who makes ordinary days feel magical.',caption:'Come with me… our memories are waiting.',story:'From the first hello to all the tiny moments after it, every chapter became a piece of us.',photos:[],videos:[],memories:[{date:'2024',title:'Our first conversation',text:'The moment our story quietly started.',photo:''}],quizTitle:'How well do you know our story?',questions:[{type:'multiple',q:'What makes me smile instantly?',opts:['Your messages','Your smile','Both'],ans:2}],letterTitle:'My love,',letter:'I do not need perfect days. I just want more ordinary days with you — more laughter, more memories, and more little moments that become ours.',final:'If I had to choose again, I would still choose you.',replay:'Start from the beginning',surpriseTitle:'There’s Another Surprise 💝',surpriseText:'Press play. I saved one last message for you.',voiceNote:'',backgroundMusic:'',quizAnswers:{},quizPassed:false};go(0)}
+tabs();panels();updateSetupBanner();Promise.resolve(enterReceiverMode()).then(isReceiver=>{if(!isReceiver){render(0);updateRecipientNav();updateSetupBanner();}});
+
+function updateSetupBanner(){
+  const el=document.getElementById('setupBannerText');
+  if(!el)return;
+  el.innerHTML=supabaseReady()
+    ? 'Online saving is ready. Your finished card can receive a short <b>/c/XXXXXXX</b> link.'
+    : 'One-time setup needed: add your Supabase URL and anon key to the two values in <b>ANNIVERCARD_CONFIG</b>. See SETUP.md.';
+}
+function updateMobileProgress(){const el=document.getElementById('mobileProgress');if(el)el.textContent=`Template ${Number(S.tab)+1} of 7 · ${labels[S.tab]}`;const active=document.querySelector('.mobile-tabs-wrap .tab.active');if(active)active.scrollIntoView({inline:'center',block:'nearest'})}
+function showBuildMode(){document.getElementById('builderView').style.display='flex';document.getElementById('cardView').style.display='none';document.getElementById('buildModeBtn').classList.add('active');document.getElementById('previewModeBtn').classList.remove('active')}
+function showCardMode(){
+  const builder=document.getElementById('builderView');
+  const card=document.getElementById('cardView');
+  const buildBtn=document.getElementById('buildModeBtn');
+  const previewBtn=document.getElementById('previewModeBtn');
+  if(builder)builder.style.display='none';
+  if(card)card.style.display='block';
+  if(buildBtn)buildBtn.classList.remove('active');
+  if(previewBtn)previewBtn.classList.add('active');
+  render(Number(S.tab)||0);
+  updateRecipientNav();
+}
+
+window.addEventListener('DOMContentLoaded',()=>{
+  const next=document.getElementById('templateNext');
+  const prev=document.getElementById('templatePrev');
+  if(next)next.onclick=mobileNext;
+  if(prev)prev.onclick=mobilePrev;
+  updateRecipientNav();
+});
+
+</script>
+
+</body>
+</html>
