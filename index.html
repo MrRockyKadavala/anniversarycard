@@ -6,10 +6,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>AnniverCard — Template Builder Prototype</title>
 <style>
-/* Prevent the editor from flashing before a /c/<id> receiver card loads. */
-html.receiver-loading #builderView{display:none!important}
-html.receiver-loading #cardView{display:block!important}
-html.receiver-loading body:before{content:"Loading your anniversary card…";position:fixed;inset:0;z-index:999999;display:flex;align-items:center;justify-content:center;background:#fff5f8;color:#8f3150;font:700 15px Inter,system-ui,sans-serif}
 *{box-sizing:border-box}body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,sans-serif;background:radial-gradient(circle at top,#fff7fa,#ead9df 60%,#d9c0c9);color:#351d29}
 button,input,textarea,select{font:inherit}button{cursor:pointer}
 .app{min-height:100vh;display:grid;grid-template-columns:430px 1fr}
@@ -91,11 +87,6 @@ input,textarea,select{width:100%;border:1px solid #dfcbd3;border-radius:12px;pad
 <style id="mobile-builder-layer">
 html,body{background:radial-gradient(circle at 50% 0%,#5a1f38,#160914 75%);min-height:100%;margin:0}.mobile-builder-shell{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;box-sizing:border-box}.mobile-phone{width:min(430px,96vw);height:min(900px,94vh);min-height:650px;border:10px solid #171118;border-radius:42px;background:#09070a;box-shadow:0 30px 90px #000b,0 0 0 2px #ffffff18;overflow:hidden;position:relative;display:flex;flex-direction:column}.mobile-phone-top{height:42px;flex:0 0 42px;background:#171018;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 17px;font-weight:900;font-size:13px;box-sizing:border-box}.mobile-live{font-size:10px;color:#ff9fbd;letter-spacing:.8px}.mobile-modebar{display:flex;gap:6px;padding:8px;background:#24131d;border-bottom:1px solid #ffffff12}.modebtn{flex:1;border:0;border-radius:12px;padding:9px 8px;background:#ffffff0d;color:#f7dce6;font-weight:900;cursor:pointer}.modebtn.active{background:#d92f73;color:#fff}.mobile-builder-view,.mobile-card-view{flex:1;min-height:0;overflow:hidden}.mobile-builder-view{display:flex;flex-direction:column;background:#fff5f8;color:#381526}.mobile-progress{font-size:11px;font-weight:900;color:#8b4a61;text-align:center;padding:8px 10px 3px;background:#fff5f8}.mobile-tabs-wrap{overflow-x:auto;background:#fff5f8;border-bottom:1px solid #ead6de;scrollbar-width:none}.mobile-tabs-wrap::-webkit-scrollbar{display:none}.mobile-tabs-wrap .tabs{display:flex;gap:6px;padding:7px 9px;width:max-content}.mobile-tabs-wrap .tab{border:0;border-radius:999px;background:#f2e2e8;color:#71354b;padding:7px 10px;font-size:11px;font-weight:900;white-space:nowrap;cursor:pointer}.mobile-tabs-wrap .tab.active{background:#d92f73;color:#fff}.mobile-builder-view #panels{flex:1;overflow:auto;padding:0 12px 24px;box-sizing:border-box}.mobile-builder-view .panel{padding:13px 2px 30px}.mobile-builder-view h2{font-size:20px;margin:3px 0 7px}.mobile-builder-view .hint{font-size:12px;line-height:1.45}.mobile-builder-view .field label{font-size:11px}.mobile-builder-view input,.mobile-builder-view textarea,.mobile-builder-view select{font-size:13px}.mobile-builder-view .actions{position:sticky;bottom:0;background:linear-gradient(transparent,#fff5f8 25%);padding-top:14px;z-index:4}.mobile-card-view{display:none;background:#100911}.phone-preview-inner{height:100%;position:relative}.phone-preview-inner .screen{height:100%;min-height:0;border-radius:0;overflow:auto}.mobile-card-view .mobile-template-nav{bottom:12px;right:10px}.mobile-card-view .mobile-template-nav button{font-size:11px;padding:8px 10px}@media(max-width:500px){.mobile-builder-shell{padding:0}.mobile-phone{width:100vw;height:100vh;min-height:0;border:0;border-radius:0}.mobile-phone-top{height:48px;flex-basis:48px}}
 </style>
-<script>
-if(/^\/c\/[A-Za-z0-9]{7}\/?$/.test(location.pathname)){
-  document.documentElement.classList.add('receiver-loading');
-}
-</script>
 </head>
 <body>
 <div class="mobile-builder-shell">
@@ -407,28 +398,66 @@ function decodeReceiverState(token){
     return JSON.parse(new TextDecoder().decode(bytes));
   }catch(e){return null}
 }
+async function optimizeImageDataUrl(dataUrl){
+  if(!dataUrl || !String(dataUrl).startsWith('data:image/')) return dataUrl;
+  const src=String(dataUrl);
+  try{
+    const img=new Image();
+    await new Promise((resolve,reject)=>{
+      img.onload=resolve;
+      img.onerror=reject;
+      img.src=src;
+    });
+    const maxSide=1600;
+    const scale=Math.min(1,maxSide/Math.max(img.naturalWidth||img.width,img.naturalHeight||img.height));
+    const w=Math.max(1,Math.round((img.naturalWidth||img.width)*scale));
+    const h=Math.max(1,Math.round((img.naturalHeight||img.height)*scale));
+    const canvas=document.createElement('canvas');
+    canvas.width=w; canvas.height=h;
+    const ctx=canvas.getContext('2d',{alpha:false});
+    if(!ctx)return src;
+    ctx.drawImage(img,0,0,w,h);
+    const compressed=canvas.toDataURL('image/jpeg',0.80);
+    return compressed.length<src.length?compressed:src;
+  }catch(e){
+    return src;
+  }
+}
+
 async function uploadNetlifyMedia(dataUrl,onProgress){
   if(!dataUrl || !String(dataUrl).startsWith('data:')) return dataUrl;
-  const m=String(dataUrl).match(/^data:([^;,]+)(?:;[^,]*)?,(.*)$/s);
-  if(!m) return dataUrl;
+  let source=String(dataUrl);
+  if(source.startsWith('data:image/')) source=await optimizeImageDataUrl(source);
+  const m=source.match(/^data:([^;,]+)(?:;[^,]*)?,(.*)$/s);
+  if(!m) return source;
   const mime=m[1] || 'application/octet-stream';
   let binary;
   try{binary=atob(m[2]);}catch(e){throw new Error('Could not read one of the selected media files.');}
   const bytes=new Uint8Array(binary.length);
   for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
-  const key=crypto.randomUUID().replace(/-/g,'')+Math.random().toString(36).slice(2,8);
-  const controller=new AbortController();
-  const timer=setTimeout(()=>controller.abort(),30000);
-  try{
-    onProgress?.('Uploading media…');
-    const r=await fetch('/api/media/'+key,{method:'POST',headers:{'Content-Type':mime,'Cache-Control':'no-cache'},body:bytes,signal:controller.signal});
-    if(!r.ok) throw new Error((await r.text()) || ('Media upload failed ('+r.status+')'));
-    onProgress?.('Media uploaded');
-    return '/api/media/'+key;
-  }catch(e){
-    if(e?.name==='AbortError') throw new Error('A media upload timed out after 30 seconds. Please try again.');
-    throw e;
-  }finally{clearTimeout(timer)}
+
+  let lastError=null;
+  for(let attempt=1;attempt<=3;attempt++){
+    const key=crypto.randomUUID().replace(/-/g,'')+Math.random().toString(36).slice(2,8);
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),60000);
+    try{
+      onProgress?.(attempt===1?'Uploading media…':'Retrying media upload…');
+      const r=await fetch('/api/media/'+key,{method:'POST',headers:{'Content-Type':mime,'Cache-Control':'no-cache'},body:bytes,signal:controller.signal});
+      if(!r.ok){
+        const detail=(await r.text()) || ('Media upload failed ('+r.status+')');
+        if(r.status===413) throw new Error('This photo is still too large after compression. Please choose a smaller photo.');
+        throw new Error(detail);
+      }
+      onProgress?.('Media uploaded');
+      return '/api/media/'+key;
+    }catch(e){
+      lastError=e;
+      if(e?.name==='AbortError') lastError=new Error('Media upload timed out. Retrying…');
+      if(attempt<3) await new Promise(resolve=>setTimeout(resolve,1000*attempt));
+    }finally{clearTimeout(timer)}
+  }
+  throw new Error(lastError?.message||'Media upload failed. Please try again.');
 }
 async function prepareNetlifyPayload(progress){
   const payload=JSON.parse(JSON.stringify({...S,tab:0,quizAnswers:{},quizPassed:false}));
@@ -448,13 +477,15 @@ async function prepareNetlifyPayload(progress){
   const total=jobs.length;
   if(!total){progress?.('No media to upload. Creating your link…');return payload;}
   progress?.('Uploading 0 of '+total+' media files…');
-  await Promise.all(jobs.map(async job=>{
+  // Upload one file at a time to avoid mobile/network throttling when many photos are selected.
+  for(const job of jobs){
     await job.run();
     done++;
     progress?.('Uploading '+done+' of '+total+' media files…');
-  }));
+  }
   return payload;
 }
+
 function makeCardId(){
   const chars='ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz23456789';
   let id=''; for(let i=0;i<7;i++) id+=chars[Math.floor(Math.random()*chars.length)];
@@ -508,7 +539,6 @@ async function enterReceiverMode(){
       if(builder)builder.style.display='none';
       if(card)card.style.display='block';
       render(0); updateMobileProgress(); updateRecipientNav();
-      document.documentElement.classList.remove('receiver-loading');
       return true;
     }catch(e){ console.error(e); return false; }
   }
@@ -522,7 +552,6 @@ async function enterReceiverMode(){
   if(builder)builder.style.display='none';
   if(card)card.style.display='block';
   render(0); updateMobileProgress(); updateRecipientNav();
-  document.documentElement.classList.remove('receiver-loading');
   return true;
 }
 
