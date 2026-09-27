@@ -1,3 +1,4 @@
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -54,6 +55,7 @@ input,textarea,select{width:100%;border:1px solid #dfcbd3;border-radius:12px;pad
 .bunny .earinner.left{left:12px;transform:rotate(-9deg)}.bunny .earinner.right{right:12px;transform:rotate(9deg)}
 .bunny .cheek{position:absolute;top:25px;width:11px;height:6px;background:#efb1bd88;border-radius:50%}
 .bunny .cheek.left{left:2px}.bunny .cheek.right{right:2px}.male{left:31%;background:#e9e4e4}.female{left:52%;background:#f2d8e3}.suit{position:absolute;left:8px;right:8px;bottom:0;height:44px;background:#25252c;border-radius:0 0 22px 22px}.dress{position:absolute;left:-5px;right:-5px;bottom:0;height:50px;background:#e98eaf;border-radius:30px 30px 20px 20px}.flowers{position:absolute;left:5px;bottom:30px;font-size:25px}.bird{position:absolute;top:18%;font-size:24px;animation:fly 6s linear infinite}.b1{left:8%}.b2{left:65%;animation-delay:1.4s}.b3{left:35%;animation-delay:3s}@keyframes fly{50%{transform:translate(55px,22px)}100%{transform:translate(110px,-4px)}}.petal{position:absolute;top:-20px;font-size:17px;animation:fall 7s linear infinite}@keyframes fall{to{transform:translateY(900px) rotate(360deg);opacity:.1}}
+.gallery-frame{position:relative;padding:18px 16px 20px;margin-top:10px;border-radius:22px;background:linear-gradient(145deg,#fffafd,#fff0f5);border:1px solid #efc2d0;overflow:hidden}.gallery-frame:before,.gallery-frame:after{position:absolute;font-size:26px;opacity:.85;pointer-events:none;z-index:2}.gallery-frame:before{content:'🌸 🌿 🌷';left:2px;top:8px;transform:rotate(-8deg)}.gallery-frame:after{content:'🌷 🌿 🌸';right:2px;top:8px;transform:rotate(8deg)}.gallery-frame .photoGrid{position:relative;z-index:1;margin-top:25px}.gallery-frame .photoGrid img{border:3px solid #fff}.timeline-wrap{position:relative;margin-top:22px;padding:4px 0 0}.timeline-wrap:before{content:'';position:absolute;left:9px;top:8px;bottom:34px;width:3px;border-radius:99px;background:linear-gradient(#d98aa8,#b45b7e,#efbfd0);box-shadow:0 0 10px #c45d8738}.timeline-wrap:after{content:'✨';position:absolute;left:-4px;bottom:0;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:#fff0f6;box-shadow:0 0 0 5px #fff0f688,0 0 22px #d65b8a66;animation:timelineEndGlow 2s ease-in-out infinite}.timeline-entry{position:relative;padding-left:32px}.timeline-entry .memory:before{left:-28px;top:18px;width:12px;height:12px;background:#d95b88;box-shadow:0 0 0 5px #f9d9e5,0 0 14px #d95b8877}.timeline-ending{position:relative;margin:18px 0 0 32px;padding:12px 14px;border-radius:16px;background:linear-gradient(135deg,#fff,#fff0f6);border:1px solid #edbfd0;text-align:center;animation:timelineEndRise .9s ease both}.timeline-ending b{display:block;color:#8f3150}.timeline-ending span{display:block;font-size:12px;color:#8b6875;margin-top:4px}@keyframes timelineEndGlow{0%,100%{transform:scale(.92);opacity:.75}50%{transform:scale(1.12);opacity:1}}@keyframes timelineEndRise{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
 .story{background:radial-gradient(circle at 20% 10%,#fff,#ffe9f1 42%,#f1cbd8);}.story .memory{border:1px solid #efc2d0;box-shadow:0 12px 28px #8d315022}.story .photoGrid img{box-shadow:0 8px 20px #71304725}.photoGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}.photoGrid img{width:100%;height:145px;object-fit:cover;border-radius:14px}.timeline{border-left:2px solid #d7a1b4;margin:20px 0 0 9px;padding-left:18px}.memory{position:relative;background:#fff;border-radius:14px;padding:13px;margin:12px 0;box-shadow:0 5px 18px #7c3d4d18}.memory:before{content:"";position:absolute;left:-25px;top:17px;width:10px;height:10px;border-radius:50%;background:#a64969}
 .quiz{background:radial-gradient(circle at 50% 0,#fff7fa,#ffdce8 45%,#f1b9ca)}.quiz .q{border:1px solid #efc3d1;box-shadow:0 12px 30px #7b355020}.q{background:#fff;border-radius:16px;padding:17px;margin:14px 0;box-shadow:0 7px 20px #7b355016}.opt{display:block;width:100%;text-align:left;margin:8px 0;padding:11px;border:1px solid #e6cbd5;background:#fff7fa;border-radius:11px}
 .letter{background:radial-gradient(circle at 50% 10%,#fffdf5,#f5e5c7 75%,#e9d3a9)}.paper{background:#fffdf6;border-radius:7px;padding:25px 20px;box-shadow:0 12px 30px #51361c20;min-height:75%}.paper p{white-space:pre-wrap;line-height:1.7}
@@ -71,6 +73,7 @@ input,textarea,select{width:100%;border:1px solid #dfcbd3;border-radius:12px;pad
 
 .receiver-link-card{margin-top:16px;padding:15px;border:1px solid #e8b9cc;border-radius:18px;background:linear-gradient(135deg,#fff7fa,#fff);box-shadow:0 8px 24px #7b174a12}.receiver-link-card p{margin:7px 0 12px}.receiver-link-result{margin-top:10px;word-break:break-all;font-size:12px;color:#7b2949}.receiver-link-result input{width:100%;padding:10px;border:1px solid #e2b3c6;border-radius:10px;background:#fff}.receiver-link-result button{margin-top:8px;width:100%}
 .receiver-only .mobile-phone-top,.receiver-only .mobile-modebar{display:none!important}.receiver-only .mobile-phone{border:0;box-shadow:none}.receiver-only .mobile-builder-shell{background:transparent}
+.photo-item{position:relative}.photo-remove{position:absolute;right:6px;top:6px;border:0;border-radius:999px;background:#ffffffee;color:#8f3150;font-weight:900;width:30px;height:30px;box-shadow:0 4px 12px #5d193b33;z-index:3}.quiz-answer-hint{font-size:11px;color:#8b6875;margin-top:5px}.remove-memory-photo{margin-top:7px;width:100%}
 </style>
 
 <style id="mobile-template-nav-css">
@@ -110,17 +113,20 @@ story:'Every moment with you became one of my favourite memories. This is our li
 photos:[],memories:[{date:'2025',title:'The day we met',text:'The beginning of something beautiful.',photo:''}],
 quizTitle:'How well do you know us?',questions:[{type:'multiple',q:'What is my favourite thing about you?',opts:['Your smile','Your kindness','Everything'],ans:2}],
 letterTitle:'To the one I love',letter:'If I could keep one thing forever, it would be the feeling of being with you. Thank you for every laugh, every little moment, and every memory. Happy Anniversary ❤️',
-final:'No matter where life takes us, I want to keep choosing you.',replay:'Replay our story',surpriseTitle:'There’s Another Surprise 💝',surpriseText:'One last little gift, just for you.',voiceNote:'',quizAnswers:{},quizPassed:false};
+final:'No matter where life takes us, I want to keep choosing you.',replay:'Replay our story',surpriseTitle:'There’s Another Surprise 💝',surpriseText:'One last little gift, just for you.',voiceNote:'',quizAnswers:{},quizPassed:false,voiceUnlocked:false};
 
 function esc(x){return String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-function tabs(){document.getElementById('tabs').innerHTML=labels.map((x,i)=>`<button class="tab ${i===S.tab?'active':''}" onclick="go(${i})">${x}</button>`).join('')}
+function tabs(){const receiver=document.body.classList.contains('receiver-only');document.getElementById('tabs').innerHTML=labels.map((x,i)=>{const locked=receiver&&((i>=1&&!S.voiceUnlocked)||(i>=4&&!S.quizPassed));return `<button class="tab ${i===S.tab?'active':''}" ${locked?'disabled title="Locked until the previous challenge is completed"':''} onclick="${locked?'return false':`go(${i})`}">${x}${locked?' 🔒':''}</button>`}).join('')}
 function field(label,key,type='input',extra=''){return `<div class="field"><label>${label}</label>${type==='textarea'?`<textarea ${extra} oninput="S.${key}=this.value;render(${S.tab})">${esc(S[key])}</textarea>`:`<input ${extra} value="${esc(S[key])}" oninput="S.${key}=this.value;render(${S.tab})">`}</div>`}
 function panels(){
 const p=[];
-p.push(`<section class="panel ${S.tab===0?'active':''}"><h2>🎙 Voice Unlock</h2><div class="hint">Only ask for what this template needs. The recipient unlocks the next scene by saying the phrase.</div>${field('Recipient name','name')}${field('Sender name','sender')}${field('Opening text','opening','textarea')}${field('Voice phrase','phrase')}<div class="card"><div class="cardhead"><b>Flirty lines</b><span class="mini">${S.flirt.length} added</span></div>${S.flirt.map((x,i)=>`<div class="field"><input value="${esc(x)}" oninput="S.flirt[${i}]=this.value;render(0)"></div>`).join('')}<button class="add" onclick="S.flirt.push('A new flirty line…');render(0)">＋ Add flirty line</button></div><div class="actions"><button class="primary" onclick="go(1)">Save & continue →</button><button class="secondary" onclick="localPreview(0)">Preview template</button></div></section>`);
+p.push(`<section class="panel ${S.tab===0?'active':''}"><h2>🎙 Voice Unlock</h2><div class="hint">Only ask for what this template needs. The recipient unlocks the next scene by saying the phrase.</div>${field('Recipient name','name')}${field('Sender name','sender')}${field('Opening text','opening','textarea')}${field('Voice phrase','phrase')}<div class="card"><div class="cardhead"><b>Flirty lines</b><span class="mini">${S.flirt.length} added</span></div>${S.flirt.map((x,i)=>`<div class="field"><div class="row" style="grid-template-columns:1fr auto;align-items:end"><input value="${esc(x)}" oninput="updateFlirtyLine(${i},this.value)"><button type="button" class="secondary" onclick="removeFlirtyLine(${i})">Remove</button></div></div>`).join('')}<button class="add" onclick="S.flirt.push('A new flirty line…');refreshBuilderSection(0)">＋ Add flirty line</button></div><div class="actions"><button class="primary" onclick="go(1)">Save & continue →</button><button class="secondary" onclick="localPreview(0)">Preview template</button></div></section>`);
 p.push(`<section class="panel ${S.tab===1?'active':''}"><h2>🐰 Anniversary Reveal</h2><div class="hint">This scene is the cinematic bridge between the voice challenge and your story.</div>${field('Anniversary heading','anniv')}${field('Reveal message','reveal','textarea')}${field('Small caption','caption') }<div class="actions"><button class="secondary" onclick="go(0)">← Back</button><button class="primary" onclick="go(2)">Save & continue →</button><button class="secondary" onclick="localPreview(1)">Preview</button></div></section>`);
-p.push(`<section class="panel ${S.tab===2?'active':''}"><h2>📸 Our Story + Memories</h2><div class="hint">Add your story first, then add photos and memories only when you want them.</div>${field('Our story','story','textarea')}<div class="card"><div class="cardhead"><b>Gallery</b><span class="mini">${S.photos.length} photos</span></div><input type="file" accept="image/*" multiple onchange="addPhotos(this.files)"><div class="photoGrid">${S.photos.map(x=>`<img src="${x}">`).join('')}</div></div><div class="card"><div class="cardhead"><b>Memories</b><span class="mini">${S.memories.length} added</span></div>${S.memories.map((m,i)=>`<div class="card"><div class="row"><div class="field"><label>Date / year</label><input value="${esc(m.date)}" oninput="S.memories[${i}].date=this.value;render(2)"></div><div class="field"><label>Title</label><input value="${esc(m.title)}" oninput="S.memories[${i}].title=this.value;render(2)"></div></div><div class="field"><label>Description</label><textarea oninput="S.memories[${i}].text=this.value;render(2)">${esc(m.text)}</textarea></div><div class="field"><label>Memory photo (optional)</label><input type="file" accept="image/*" onchange="addMemoryPhoto(this.files,${i})"></div></div>`).join('')}<button class="add" onclick="S.memories.push({date:'',title:'',text:'',photo:''});render(2)">＋ Add a memory</button></div><div class="actions"><button class="secondary" onclick="go(1)">← Back</button><button class="primary" onclick="go(3)">Save & continue →</button><button class="secondary" onclick="localPreview(2)">Preview</button></div></section>`);
-p.push(`<section class="panel ${S.tab===3?'active':''}"><h2>💕 Love Quiz</h2><div id="quizLockMessage" class="quiz-lock-note">Answer every question correctly to unlock the next template.</div><div class="hint">Create one question at a time. Pick a type and add only the fields that type needs.</div>${field('Quiz title','quizTitle')}<div class="card">${S.questions.map((q,i)=>`<div class="card"><div class="cardhead"><b>Question ${i+1}</b><button class="secondary" onclick="S.questions.splice(${i},1);render(3)">Remove</button></div><div class="field"><label>Question type</label><select onchange="S.questions[${i}].type=this.value;render(3)"><option value="multiple" ${q.type==='multiple'?'selected':''}>Multiple Choice</option><option value="truefalse" ${q.type==='truefalse'?'selected':''}>True / False</option><option value="blank" ${q.type==='blank'?'selected':''}>Fill in the Blank</option><option value="short" ${q.type==='short'?'selected':''}>Short Answer</option></select></div><div class="field"><label>Question</label><textarea oninput="S.questions[${i}].q=this.value;render(3)">${esc(q.q)}</textarea></div>${q.type==='multiple'?`<div class="field"><label>Answers (one per line)</label><textarea oninput="S.questions[${i}].opts=this.value.split('\\n');render(3)">${esc((q.opts||[]).join('\\n'))}</textarea></div><div class="field"><label>Correct answer number</label><input type="number" min="1" value="${(q.ans||0)+1}" oninput="S.questions[${i}].ans=Number(this.value)-1;render(3)"></div>`:q.type==='truefalse'?`<div class="field"><label>Correct answer</label><select onchange="S.questions[${i}].ans=this.value;render(3)"><option ${q.ans==='true'?'selected':''}>true</option><option ${q.ans==='false'?'selected':''}>false</option></select></div>`:`<div class="field"><label>Expected answer</label><input value="${esc(q.ans||'')}" oninput="S.questions[${i}].ans=this.value;render(3)"></div>`}</div>`).join('')}<button class="add" onclick="S.questions.push({type:'multiple',q:'',opts:['',''],ans:0});render(3)">＋ Add question</button></div><div class="actions"><button class="secondary" onclick="go(2)">← Back</button><button class="primary" onclick="go(4)">Save & continue →</button><button class="secondary" onclick="localPreview(3)">Preview</button></div></section>`);
+p.push(`<section class="panel ${S.tab===2?'active':''}"><h2>📸 Our Story + Memories</h2><div class="hint">Add your story first, then add photos and memories only when you want them.</div>${field('Our story','story','textarea')}<div class="card"><div class="cardhead"><b>Gallery</b><span class="mini">${S.photos.length} photos</span></div><div class="gallery-frame"><input type="file" accept="image/*" multiple onchange="addPhotos(this.files)"><div class="photoGrid">${S.photos.map((x,i)=>`<div class="photo-item"><img src="${x}"><button type="button" class="photo-remove" onclick="removeGalleryPhoto(${i})" title="Remove photo">×</button></div>`).join('')}</div></div></div><div class="card"><div class="cardhead"><b>Memories</b><span class="mini">${S.memories.length} added</span></div>${S.memories.map((m,i)=>`<div class="card"><div class="cardhead"><b>Memory ${i+1}</b><button type="button" class="secondary" onclick="removeMemory(${i})">Remove</button></div><div class="row"><div class="field"><label>Date / year</label><input value="${esc(m.date)}" oninput="updateMemoryField(${i},'date',this.value)"></div><div class="field"><label>Title</label><input value="${esc(m.title)}" oninput="updateMemoryField(${i},'title',this.value)"></div></div><div class="field"><label>Description</label><textarea oninput="updateMemoryField(${i},'text',this.value)">${esc(m.text)}</textarea></div><div class="field"><label>Memory photo (optional)</label><input type="file" accept="image/*" onchange="addMemoryPhoto(this.files,${i})">${m.photo?`<div style="margin-top:8px"><div class="mini">📷 Photo attached to this memory</div><img src="${m.photo}" style="display:block;width:100%;max-height:150px;object-fit:cover;border-radius:10px;margin-top:6px;border:2px solid #f0d4df"><button type="button" class="secondary remove-memory-photo" onclick="removeMemoryPhoto(${i})">🗑 Remove memory photo</button></div>`:''}</div></div>`).join('')}<button class="add" onclick="addMemory()">＋ Add a memory</button></div><div class="actions"><button class="secondary" onclick="go(1)">← Back</button><button class="primary" onclick="go(3)">Save & continue →</button><button class="secondary" onclick="localPreview(2)">Preview</button></div></section>`);
+p.push(`<section class="panel ${S.tab===3?'active':''}"><h2>💕 Love Quiz</h2><div id="quizLockMessage" class="quiz-lock-note">Answer every question correctly to unlock the next template.</div><div class="hint">Create as many questions as you want. For Fill in the Blank and Short Answer, enter every accepted correct answer on a separate line.</div>${field('Quiz title','quizTitle')}<div class="card">${S.questions.map((q,i)=>`<div class="card"><div class="cardhead"><b>Question ${i+1}</b><button type="button" class="secondary" onclick="removeQuestion(${i})">Remove</button></div><div class="field"><label>Question type</label><select onchange="changeQuestionType(${i},this.value)"><option value="multiple" ${q.type==='multiple'?'selected':''}>Multiple Choice</option><option value="truefalse" ${q.type==='truefalse'?'selected':''}>True / False</option><option value="blank" ${q.type==='blank'?'selected':''}>Fill in the Blank</option><option value="short" ${q.type==='short'?'selected':''}>Short Answer</option></select></div><div class="field"><label>Question</label><textarea oninput="updateQuestionField(${i},'q',this.value)">${esc(q.q)}</textarea></div>${q.type==='multiple'?`<div class="field"><label>Answers (one per line)</label><textarea oninput="updateQuestionOptions(${i},this.value)">${esc((q.opts||[]).join('\n'))}</textarea><div class="quiz-answer-hint">The recipient chooses one of these answers.</div></div><div class="field"><label>Correct answer number</label><input type="number" min="1" max="${Math.max(1,(q.opts||[]).length)}" value="${(q.ans??0)+1}" oninput="updateQuestionNumberAnswer(${i},this.value)"></div>`:q.type==='truefalse'?`<div class="field"><label>Correct answer</label><select onchange="updateQuestionField(${i},'ans',this.value)"><option value="true" ${String(q.ans).toLowerCase()==='true'?'selected':''}>True</option><option value="false" ${String(q.ans).toLowerCase()==='false'?'selected':''}>False</option></select></div>`:`<div class="field"><label>Accepted correct answers — one per line</label><textarea placeholder="Enter one accepted answer per line. Example:
+Paris France
+parisfrance
+PARIS  FRANCE" oninput="updateAcceptedAnswers(${i},this.value)">${esc((q.answers||((q.ans!==undefined&&q.ans!=='')?[q.ans]:[])).join('\n'))}</textarea><div class="quiz-answer-hint">Any one of these answers will be accepted. Add as many as you need.</div></div>`}</div>`).join('')}<button class="add" onclick="addQuestion()">＋ Add question</button></div><div class="actions"><button class="secondary" onclick="go(2)">← Back</button><button class="primary" onclick="go(4)">Save & continue →</button><button class="secondary" onclick="localPreview(3)">Preview</button></div></section>`);
 p.push(`<section class="panel ${S.tab===4?'active':''}"><h2>💌 Personal Letter</h2><div class="hint">Just the heading and your letter. Nothing else.</div>${field('Letter heading','letterTitle')}${field('Your letter','letter','textarea')}<div class="actions"><button class="secondary" onclick="go(3)">← Back</button><button class="primary" onclick="go(5)">Save & continue →</button><button class="secondary" onclick="localPreview(4)">Preview</button></div></section>`);
 p.push(`<section class="panel ${S.tab===5?'active':''}"><h2>❤️ Final Scene</h2><div class="hint">The last message the recipient sees.</div>${field('Final message','final','textarea')}<div class="actions"><button class="secondary" onclick="go(4)">← Back</button><button class="primary" onclick="go(6)">Save & continue →</button><button class="secondary" onclick="localPreview(5)">Preview</button></div></section>`);
 p.push(`<section class="panel ${S.tab===6?'active':''}">
@@ -155,6 +161,7 @@ ${S.voiceNote?`<audio controls src="${S.voiceNote}" style="width:100%;margin-top
 document.getElementById('panels').innerHTML=p.join('')}
 function go(i){
   i=Math.max(0,Math.min(6,Number(i)||0));
+  if(document.body.classList.contains('receiver-only')){if(i>=1 && S.voiceUnlocked!==true)return;if(i>=4 && S.quizPassed!==true)return;}
   S.tab=i;
   tabs();
   panels();
@@ -168,8 +175,23 @@ function go(i){
   });
 }
 function replayStory(){S.tab=0;tabs();panels();render(0);updateMobileProgress();requestAnimationFrame(()=>{const screen=document.querySelector('.screen');if(screen)screen.scrollTo({top:0,behavior:'auto'});})}
-function addPhotos(files){[...files].forEach(f=>{let r=new FileReader();r.onload=e=>{S.photos.push(e.target.result);render(2);panels()};r.readAsDataURL(f)})}
-function addMemoryPhoto(files,i){let f=files[0];if(!f)return;let r=new FileReader();r.onload=e=>{S.memories[i].photo=e.target.result;render(2);panels()};r.readAsDataURL(f)}
+function refreshBuilderSection(i){S.tab=i;tabs();panels();render(i);updateMobileProgress();requestAnimationFrame(()=>{const p=document.getElementById('panels');if(p)p.scrollTop=p.scrollTop;});}
+function addPhotos(files){[...files].forEach(f=>{let r=new FileReader();r.onload=e=>{S.photos.push(e.target.result);refreshBuilderSection(2)};r.readAsDataURL(f)})}
+function removeGalleryPhoto(i){if(i<0||i>=S.photos.length)return;S.photos.splice(i,1);refreshBuilderSection(2)}
+function addMemory(){S.memories.push({date:'',title:'',text:'',photo:''});refreshBuilderSection(2);requestAnimationFrame(()=>{const p=document.getElementById('panels');if(p)p.scrollTop=p.scrollHeight;});}
+function addMemoryPhoto(files,i){let f=files&&files[0];if(!f)return;let r=new FileReader();r.onload=e=>{if(S.memories[i])S.memories[i].photo=e.target.result;refreshBuilderSection(2)};r.readAsDataURL(f)}
+function removeMemoryPhoto(i){if(S.memories[i]){S.memories[i].photo='';refreshBuilderSection(2)}}
+function removeMemory(i){if(i<0||i>=S.memories.length)return;if(S.memories.length===1){S.memories[0]={date:'',title:'',text:'',photo:''};}else{S.memories.splice(i,1)}refreshBuilderSection(2)}
+function addQuestion(){S.questions.push({type:'multiple',q:'',opts:['',''],ans:0,answers:[]});S.quizAnswers={};S.quizPassed=false;refreshBuilderSection(3);requestAnimationFrame(()=>{const p=document.getElementById('panels');if(p)p.scrollTop=p.scrollHeight;});}
+function removeQuestion(i){if(i<0||i>=S.questions.length)return;S.questions.splice(i,1);S.quizAnswers={};S.quizPassed=false;refreshBuilderSection(3)}
+function changeQuestionType(i,type){const q=S.questions[i];if(!q)return;q.type=type;if(type==='multiple'){q.opts=Array.isArray(q.opts)&&q.opts.length?q.opts:['',''];q.ans=Number.isFinite(Number(q.ans))?Number(q.ans):0;}else if(type==='truefalse'){q.ans=String(q.ans).toLowerCase()==='false'?'false':'true';}else{q.answers=Array.isArray(q.answers)&&q.answers.length?q.answers:(q.ans!==undefined&&q.ans!==''?[String(q.ans)]:['']);q.ans=q.answers[0]||'';}S.quizAnswers={};S.quizPassed=false;refreshBuilderSection(3)}
+function updateMemoryField(i,key,value){if(S.memories[i])S.memories[i][key]=value}
+function updateQuestionField(i,key,value){if(S.questions[i])S.questions[i][key]=value}
+function updateFlirtyLine(i,value){if(S.flirt[i]!==undefined)S.flirt[i]=value}
+function removeFlirtyLine(i){if(i<0||i>=S.flirt.length)return;if(S.flirt.length===1)S.flirt[0]='';else S.flirt.splice(i,1);refreshBuilderSection(0)}
+function updateQuestionOptions(i,value){if(S.questions[i])S.questions[i].opts=value.split(/\r?\n/)}
+function updateQuestionNumberAnswer(i,value){if(S.questions[i])S.questions[i].ans=Math.max(0,Number(value||1)-1)}
+function updateAcceptedAnswers(i,value){if(S.questions[i]){S.questions[i].answers=value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);S.questions[i].ans=S.questions[i].answers[0]||''}}
 function petals(n=18){return Array.from({length:n},(_,i)=>`<span class="petal" style="left:${(i*37)%100}%;animation-delay:${(i%9)*.45}s">🌸</span>`).join('')}
 function romanceDecor(){
   let p='';
@@ -187,9 +209,11 @@ function roseDecor(){
 function resetQuizState(){
   S.quizAnswers = {};
   S.quizPassed = false;
+  tabs();
+  updateRecipientNav();
 }
 function normalizeQuizAnswer(v){
-  return String(v??'').trim().toLowerCase().replace(/\s+/g,' ');
+  return String(v??'').toLowerCase().replace(/[^a-z0-9]/g,'');
 }
 function answerQuiz(qi, value){
   const q=S.questions[qi];
@@ -200,7 +224,9 @@ function answerQuiz(qi, value){
   }else if(q.type==='truefalse'){
     correct=String(value).toLowerCase()===String(q.ans).toLowerCase();
   }else{
-    correct=normalizeQuizAnswer(value)===normalizeQuizAnswer(q.ans);
+    const accepted=Array.isArray(q.answers)&&q.answers.length?q.answers:(q.ans!==undefined&&q.ans!==''?[q.ans]:[]);
+    const userAnswer=normalizeQuizAnswer(value);
+    correct=!!userAnswer && accepted.some(a=>userAnswer===normalizeQuizAnswer(a));
   }
   S.quizAnswers=S.quizAnswers||{};
   S.quizAnswers[qi]=correct;
@@ -211,6 +237,7 @@ function answerQuiz(qi, value){
   if(qbox) qbox.classList.toggle('quiz-correct',correct);
   const status=document.getElementById('quizStatus');
   if(status) status.textContent=S.quizPassed?'❤️ All correct — you may continue.':'Answer every question correctly to continue.';
+  tabs();
   updateRecipientNav();
 }
 function updateRecipientNav(){
@@ -222,16 +249,10 @@ function updateRecipientNav(){
   nav.style.display='flex';
   nav.style.pointerEvents='auto';
   prev.disabled=i===0;
-  if(i===3){
-    next.disabled=S.quizPassed!==true;
-    next.textContent=S.quizPassed===true?'Next →':'Locked 🔒';
-  }else if(i===6){
-    next.disabled=true;
-    next.textContent='End';
-  }else{
-    next.disabled=false;
-    next.textContent='Next →';
-  }
+  if(i===0){next.disabled=S.voiceUnlocked!==true;next.textContent=S.voiceUnlocked===true?'Next →':'Locked 🔒';}
+  else if(i===3){next.disabled=S.quizPassed!==true;next.textContent=S.quizPassed===true?'Next →':'Locked 🔒';}
+  else if(i===6){next.disabled=true;next.textContent='End';}
+  else{next.disabled=false;next.textContent='Next →';}
 }
 function mobilePrev(){
   const i=Number(S.tab)||0;
@@ -240,6 +261,7 @@ function mobilePrev(){
 function mobileNext(){
   const i=Number(S.tab)||0;
   if(i<0 || i>=6)return;
+  if(i===0 && S.voiceUnlocked!==true)return;
   if(i===3 && S.quizPassed!==true)return;
   const nextIndex=i+1;
   S.tab=nextIndex;
@@ -258,7 +280,7 @@ let h='';
 if(i===0)h=`<div class="scene voice center">${romanceDecor()}${roseDecor()}<div class="romantic-content"><div class="eyebrow">A tiny challenge for</div><div class="title">${esc(S.name)}</div><div class="heart">💗</div><p>${esc(S.opening)}</p>${S.flirt.map(x=>`<div class="pill" style="margin:4px">${esc(x)}</div>`).join('')}<button class="mic" id="voiceMic" onclick="startVoice()">🎙️</button><div class="tiny" id="voiceStatus">Tap the mic, then say: “${esc(S.phrase)}”</div></div></div></div>`;
 if(i===1)h=`<div class="scene reveal">${romanceDecor()}${roseDecor()}${petals(10)}<div class="reveal-copy"><div class="annivGlow"><div class="annivBig">${esc(S.anniv)}</div><h2>${esc(S.reveal)}</h2><p>${esc(S.caption)}</p></div></div><div class="mount"></div><div class="land"></div><div class="river"></div><div class="tree l"></div><div class="tree r"></div><div class="house"><div class="roof"></div></div><div class="bird b1">🕊️</div><div class="bird b2">🕊️</div><div class="bird b3">🕊️</div><div class="bunny male"><div class="earinner left"></div><div class="earinner right"></div><div class="face"><i class="eye left"></i><i class="eye right"></i><i class="nose"></i><i class="mouth"></i><i class="cheek left"></i><i class="cheek right"></i></div><div class="suit"></div><div class="flowers">💐</div></div><div class="bunny female"><div class="earinner left"></div><div class="earinner right"></div><div class="face"><i class="eye left"></i><i class="eye right"></i><i class="nose"></i><i class="mouth"></i><i class="cheek left"></i><i class="cheek right"></i></div><div class="dress"></div></div></div>`;
 
-if(i===2)h=`<div class="scene story">${romanceDecor()}${roseDecor()}<div class="romantic-content">${petals(12)}<div class="center" style="position:relative"><div class="eyebrow">Our story</div><h1>${esc(S.name)} & ${esc(S.sender)}</h1><p>${esc(S.story)}</p></div><div class="photoGrid">${S.photos.map(x=>`<img src="${x}">`).join('')}</div><div class="timeline">${S.memories.map(m=>`<div class="memory"><b>${esc(m.date)} · ${esc(m.title)}</b><p>${esc(m.text)}</p>${m.photo?`<img src="${m.photo}" style="width:100%;border-radius:10px">`:''}</div>`).join('')}</div></div></div>`;
+if(i===2)h=`<div class="scene story">${romanceDecor()}${roseDecor()}<div class="romantic-content">${petals(12)}<div class="center" style="position:relative"><div class="eyebrow">Our story</div><h1>${esc(S.name)} & ${esc(S.sender)}</h1><p>${esc(S.story)}</p></div><div class="gallery-frame"><div class="photoGrid">${S.photos.map(x=>`<img src="${x}">`).join('')}</div></div><div class="timeline-wrap"><div class="timeline-entry">${S.memories.map(m=>`<div class="memory"><b>${esc(m.date)} · ${esc(m.title)}</b><p>${esc(m.text)}</p>${m.photo?`<img src="${m.photo}" style="width:100%;border-radius:10px">`:''}</div>`).join('')}</div><div class="timeline-ending"><b>✨ And now, the next chapter begins</b><span>Every memory brought you here — and there is still more to discover.</span></div></div></div></div>`;
 if(i===3)h=`<div class="scene quiz">${romanceDecor()}${roseDecor()}<div class="romantic-content">${petals(8)}<div class="center"><div class="eyebrow">Just for us</div><h1>${esc(S.quizTitle)}</h1><p id="quizStatus" class="pill">${S.quizPassed?'❤️ All correct — you may continue.':'Answer every question correctly to continue.'}</p></div>${S.questions.map((q,qi)=>`<div class="q" data-q="${qi}"><b>${qi+1}. ${esc(q.q)}</b>${q.type==='multiple'?(q.opts||[]).map((o,j)=>`<button class="opt" data-quiz-q="${qi}" data-quiz-a="${j}" onclick="answerQuiz(${qi},${j})">${esc(o||'Option')}</button>`).join(''):q.type==='truefalse'?`<button class="opt" data-quiz-q="${qi}" data-quiz-a="true" onclick="answerQuiz(${qi},'true')">True</button><button class="opt" data-quiz-q="${qi}" data-quiz-a="false" onclick="answerQuiz(${qi},'false')">False</button>`:`<input id="quizInput${qi}" placeholder="Your answer…" onkeydown="if(event.key==='Enter')answerQuiz(${qi},this.value)"> <button class="opt" style="margin-top:8px" onclick="answerQuiz(${qi},document.getElementById('quizInput${qi}').value)">Check answer</button>`}<div id="quizFeedback${qi}" class="tiny" style="margin-top:8px"></div></div>`).join('')}</div></div>`;
 if(i===4)h=`<div class="scene letter">${romanceDecor()}${roseDecor()}<div class="romantic-content"><div class="paper"><div class="eyebrow">A letter for you</div><h1>${esc(S.letterTitle)}</h1><p>${esc(S.letter)}</p><div style="text-align:right;font-size:30px">♡</div></div></div></div>`;
 if(i===5)h=`<div class="scene final center">${romanceDecor()}${roseDecor()}<div class="romantic-content"><div style="padding-top:20%"><div class="finalHeart">❤️</div><div class="eyebrow">Always</div><h1>${esc(S.final)}</h1><p>Happy Anniversary, ${esc(S.name)}.</p></div></div></div>`;
@@ -322,6 +344,9 @@ function startVoice(){
     if(h===t || h.includes(t) || t.includes(h)){
       if(status)status.textContent='❤️ Recognised! Opening the anniversary reveal…';
       if(mic)mic.textContent='💖';
+      S.voiceUnlocked=true;
+      tabs();
+      updateRecipientNav();
       recognition.stop();
       setTimeout(()=>{ S.tab=1; showCardMode(); updateMobileProgress(); updateRecipientNav(); requestAnimationFrame(()=>{const screen=document.getElementById('preview'); if(screen){screen.scrollTop=0;screen.scrollLeft=0;} updateRecipientNav();}); },450);
     }else{
@@ -429,7 +454,7 @@ async function enterReceiverMode(){
       const r=await fetch('/api/cards/'+match[1],{cache:'no-store'});
       if(!r.ok) return false;
       const data=await r.json();
-      S={...S,...data,tab:0,quizAnswers:{},quizPassed:false};
+      S={...S,...data,tab:0,quizAnswers:{},quizPassed:false,voiceUnlocked:false};
       document.body.classList.add('receiver-only');
       const builder=document.getElementById('builderView'),card=document.getElementById('cardView');
       if(builder)builder.style.display='none';
@@ -442,7 +467,7 @@ async function enterReceiverMode(){
   if(!token)return false;
   const data=decodeReceiverState(token);
   if(!data)return false;
-  S={...S,...data,tab:0,quizAnswers:{},quizPassed:false};
+  S={...S,...data,tab:0,quizAnswers:{},quizPassed:false,voiceUnlocked:false};
   document.body.classList.add('receiver-only');
   const builder=document.getElementById('builderView'),card=document.getElementById('cardView');
   if(builder)builder.style.display='none';
