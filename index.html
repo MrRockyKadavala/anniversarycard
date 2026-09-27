@@ -136,13 +136,13 @@ function tabs(){const receiver=document.body.classList.contains('receiver-only')
 function field(label,key,type='input',extra=''){return `<div class="field"><label>${label}</label>${type==='textarea'?`<textarea ${extra} oninput="S.${key}=this.value;render(${S.tab})">${esc(S[key])}</textarea>`:`<input ${extra} value="${esc(S[key])}" oninput="S.${key}=this.value;render(${S.tab})">`}</div>`}
 function panels(){
 const p=[];
-p.push(`<section class="panel ${S.tab===0?'active':''}"><h2>🎙 Voice Unlock</h2><div class="hint">Only ask for what this template needs. The recipient unlocks the next scene by saying the phrase.</div>${field('Recipient name','name')}${field('Sender name','sender')}${field('Opening text','opening','textarea')}${field('Voice phrase','phrase')}<div class="card"><div class="cardhead"><b>Flirty lines</b><span class="mini">${S.flirt.length} added</span></div>${S.flirt.map((x,i)=>`<div class="field"><div class="row" style="grid-template-columns:1fr auto;align-items:end"><input value="${esc(x)}" oninput="updateFlirtyLine(${i},this.value)"><button type="button" class="secondary" onclick="removeFlirtyLine(${i})">Remove</button></div></div>`).join('')}<button class="add" onclick="S.flirt.push('A new flirty line…');refreshBuilderSection(0)">＋ Add flirty line</button></div><div class="actions"><button class="primary" onclick="go(1)">Save & continue →</button><button class="secondary" onclick="localPreview(0)">Preview template</button></div></section>`);
+p.push(`<section class="panel ${S.tab===0?'active':''}"><h2>🎙 Voice Unlock</h2><div class="hint">Only ask for what this template needs. The recipient unlocks the next scene by saying the phrase.</div>${field('Recipient name','name')}${field('Sender name','sender')}${field('Opening text','opening','textarea')}${field('Voice phrase','phrase')}<div class="card"><div class="cardhead"><b>Flirty lines</b><span class="mini">${S.flirt.length} added</span></div>${S.flirt.length?S.flirt.map((x,i)=>`<div class="field"><div class="row" style="grid-template-columns:1fr auto;align-items:end"><input value="${esc(x)}" oninput="updateFlirtyLine(${i},this.value)"><button type="button" class="secondary" onclick="removeFlirtyLine(${i})">Remove</button></div></div>`).join(''):'<div class="quiz-answer-hint" style="padding:8px 0">No flirty lines added yet.</div>'}<button class="add" onclick="S.flirt.push('A new flirty line…');refreshBuilderSection(0,{scrollBottom:true})">＋ Add flirty line</button></div><div class="actions"><button class="primary" onclick="go(1)">Save & continue →</button><button class="secondary" onclick="localPreview(0)">Preview template</button></div></section>`);
 p.push(`<section class="panel ${S.tab===1?'active':''}"><h2>🐰 Anniversary Reveal</h2><div class="hint">This scene is the cinematic bridge between the voice challenge and your story.</div>${field('Anniversary heading','anniv')}${field('Reveal message','reveal','textarea')}${field('Small caption','caption') }<div class="actions"><button class="secondary" onclick="go(0)">← Back</button><button class="primary" onclick="go(2)">Save & continue →</button><button class="secondary" onclick="localPreview(1)">Preview</button></div></section>`);
-p.push(`<section class="panel ${S.tab===2?'active':''}"><h2>📸 Our Story + Memories</h2><div class="hint">Add your story first, then add photos and memories only when you want them.</div>${field('Our story','story','textarea')}<div class="card"><div class="cardhead"><b>Gallery</b><span class="mini">${S.photos.length} photos</span></div><div class="gallery-frame"><input type="file" accept="image/*" multiple onchange="addPhotos(this.files)"><div class="photoGrid">${S.photos.map((x,i)=>`<div class="photo-item"><img src="${x}"><button type="button" class="photo-remove" onclick="removeGalleryPhoto(${i})" title="Remove photo">×</button></div>`).join('')}</div></div></div><div class="card"><div class="cardhead"><b>Memories</b><span class="mini">${S.memories.length} added</span></div>${S.memories.map((m,i)=>`<div class="card"><div class="cardhead"><b>Memory ${i+1}</b><button type="button" class="secondary" onclick="removeMemory(${i})">Remove</button></div><div class="row"><div class="field"><label>Date / year</label><input value="${esc(m.date)}" oninput="updateMemoryField(${i},'date',this.value)"></div><div class="field"><label>Title</label><input value="${esc(m.title)}" oninput="updateMemoryField(${i},'title',this.value)"></div></div><div class="field"><label>Description</label><textarea oninput="updateMemoryField(${i},'text',this.value)">${esc(m.text)}</textarea></div><div class="field"><label>Memory photo (optional)</label><input type="file" accept="image/*" onchange="addMemoryPhoto(this.files,${i})">${m.photo?`<div style="margin-top:8px"><div class="mini">📷 Photo attached to this memory</div><img src="${m.photo}" style="display:block;width:100%;max-height:150px;object-fit:cover;border-radius:10px;margin-top:6px;border:2px solid #f0d4df"><button type="button" class="secondary remove-memory-photo" onclick="removeMemoryPhoto(${i})">🗑 Remove memory photo</button></div>`:''}</div></div>`).join('')}<button class="add" onclick="addMemory()">＋ Add a memory</button></div><div class="actions"><button class="secondary" onclick="go(1)">← Back</button><button class="primary" onclick="go(3)">Save & continue →</button><button class="secondary" onclick="localPreview(2)">Preview</button></div></section>`);
-p.push(`<section class="panel ${S.tab===3?'active':''}"><h2>💕 Love Quiz</h2><div id="quizLockMessage" class="quiz-lock-note">Answer every question correctly to unlock the next template.</div><div class="hint">Create as many questions as you want. For Fill in the Blank and Short Answer, enter every accepted correct answer on a separate line.</div>${field('Quiz title','quizTitle')}<div class="card">${S.questions.map((q,i)=>`<div class="card"><div class="cardhead"><b>Question ${i+1}</b><button type="button" class="secondary" onclick="removeQuestion(${i})">Remove</button></div><div class="field"><label>Question type</label><select onchange="changeQuestionType(${i},this.value)"><option value="multiple" ${q.type==='multiple'?'selected':''}>Multiple Choice</option><option value="truefalse" ${q.type==='truefalse'?'selected':''}>True / False</option><option value="blank" ${q.type==='blank'?'selected':''}>Fill in the Blank</option><option value="short" ${q.type==='short'?'selected':''}>Short Answer</option></select></div><div class="field"><label>Question</label><textarea oninput="updateQuestionField(${i},'q',this.value)">${esc(q.q)}</textarea></div>${q.type==='multiple'?`<div class="field"><label>Answers (one per line)</label><textarea oninput="updateQuestionOptions(${i},this.value)">${esc((q.opts||[]).join('\n'))}</textarea><div class="quiz-answer-hint">The recipient chooses one of these answers.</div></div><div class="field"><label>Correct answer number</label><input type="number" min="1" max="${Math.max(1,(q.opts||[]).length)}" value="${(q.ans??0)+1}" oninput="updateQuestionNumberAnswer(${i},this.value)"></div>`:q.type==='truefalse'?`<div class="field"><label>Correct answer</label><select onchange="updateQuestionField(${i},'ans',this.value)"><option value="true" ${String(q.ans).toLowerCase()==='true'?'selected':''}>True</option><option value="false" ${String(q.ans).toLowerCase()==='false'?'selected':''}>False</option></select></div>`:`<div class="field"><label>Accepted correct answers — one per line</label><textarea placeholder="Enter one accepted answer per line. Example:
+p.push(`<section class="panel ${S.tab===2?'active':''}"><h2>📸 Our Story + Memories</h2><div class="hint">Add your story first, then add photos and memories only when you want them.</div>${field('Our story','story','textarea')}<div class="card"><div class="cardhead"><b>Gallery</b><span class="mini">${S.photos.length} photos</span></div><div class="gallery-frame"><input type="file" accept="image/*" multiple onchange="addPhotos(this.files)"><div class="photoGrid">${S.photos.map((x,i)=>`<div class="photo-item"><img src="${x}"><button type="button" class="photo-remove" onclick="removeGalleryPhoto(${i})" title="Remove photo">×</button></div>`).join('')}</div></div></div><div class="card"><div class="cardhead"><b>Memories</b><span class="mini">${S.memories.length} added</span></div>${S.memories.length?S.memories.map((m,i)=>`<div class="card"><div class="cardhead"><b>Memory ${i+1}</b><button type="button" class="secondary" onclick="removeMemory(${i})">Remove</button></div><div class="row"><div class="field"><label>Date / year</label><input value="${esc(m.date)}" oninput="updateMemoryField(${i},'date',this.value)"></div><div class="field"><label>Title</label><input value="${esc(m.title)}" oninput="updateMemoryField(${i},'title',this.value)"></div></div><div class="field"><label>Description</label><textarea oninput="updateMemoryField(${i},'text',this.value)">${esc(m.text)}</textarea></div><div class="field"><label>Memory photo (optional)</label><input type="file" accept="image/*" onchange="addMemoryPhoto(this.files,${i})">${m.photo?`<div style="margin-top:8px"><div class="mini">📷 Photo attached to this memory</div><img src="${m.photo}" style="display:block;width:100%;max-height:150px;object-fit:cover;border-radius:10px;margin-top:6px;border:2px solid #f0d4df"><button type="button" class="secondary remove-memory-photo" onclick="removeMemoryPhoto(${i})">🗑 Remove memory photo</button></div>`:''}</div></div>`).join(''):'<div class="quiz-answer-hint" style="padding:8px 0">No memories added yet. Click + Add a memory to create one.</div>'}<button class="add" onclick="addMemory()">＋ Add a memory</button></div><div class="actions"><button class="secondary" onclick="go(1)">← Back</button><button class="primary" onclick="go(3)">Save & continue →</button><button class="secondary" onclick="localPreview(2)">Preview</button></div></section>`);
+p.push(`<section class="panel ${S.tab===3?'active':''}"><h2>💕 Love Quiz</h2><div id="quizLockMessage" class="quiz-lock-note">Answer every question correctly to unlock the next template.</div><div class="hint">Create as many questions as you want. For Fill in the Blank and Short Answer, enter every accepted correct answer on a separate line.</div>${field('Quiz title','quizTitle')}<div class="card">${S.questions.length?S.questions.map((q,i)=>`<div class="card"><div class="cardhead"><b>Question ${i+1}</b><button type="button" class="secondary" onclick="removeQuestion(${i})">Remove</button></div><div class="field"><label>Question type</label><select onchange="changeQuestionType(${i},this.value)"><option value="multiple" ${q.type==='multiple'?'selected':''}>Multiple Choice</option><option value="truefalse" ${q.type==='truefalse'?'selected':''}>True / False</option><option value="blank" ${q.type==='blank'?'selected':''}>Fill in the Blank</option><option value="short" ${q.type==='short'?'selected':''}>Short Answer</option></select></div><div class="field"><label>Question</label><textarea oninput="updateQuestionField(${i},'q',this.value)">${esc(q.q)}</textarea></div>${q.type==='multiple'?`<div class="field"><label>Answers (one per line)</label><textarea oninput="updateQuestionOptions(${i},this.value)">${esc((q.opts||[]).join('\n'))}</textarea><div class="quiz-answer-hint">The recipient chooses one of these answers.</div></div><div class="field"><label>Correct answer number</label><input type="number" min="1" max="${Math.max(1,(q.opts||[]).length)}" value="${(q.ans??0)+1}" oninput="updateQuestionNumberAnswer(${i},this.value)"></div>`:q.type==='truefalse'?`<div class="field"><label>Correct answer</label><select onchange="updateQuestionField(${i},'ans',this.value)"><option value="true" ${String(q.ans).toLowerCase()==='true'?'selected':''}>True</option><option value="false" ${String(q.ans).toLowerCase()==='false'?'selected':''}>False</option></select></div>`:`<div class="field"><label>Accepted correct answers — one per line</label><textarea placeholder="Enter one accepted answer per line. Example:
 Paris France
 parisfrance
-PARIS  FRANCE" oninput="updateAcceptedAnswers(${i},this.value)">${esc((q.answers||((q.ans!==undefined&&q.ans!=='')?[q.ans]:[])).join('\n'))}</textarea><div class="quiz-answer-hint">Any one of these answers will be accepted. Add as many as you need.</div></div>`}</div>`).join('')}<button class="add" onclick="addQuestion()">＋ Add question</button></div><div class="actions"><button class="secondary" onclick="go(2)">← Back</button><button class="primary" onclick="go(4)">Save & continue →</button><button class="secondary" onclick="localPreview(3)">Preview</button></div></section>`);
+PARIS  FRANCE" oninput="updateAcceptedAnswers(${i},this.value)">${esc((q.answers||((q.ans!==undefined&&q.ans!=='')?[q.ans]:[])).join('\n'))}</textarea><div class="quiz-answer-hint">Any one of these answers will be accepted. Add as many as you need.</div></div>`}</div>`).join(''):'<div class="quiz-answer-hint" style="padding:8px 0">No questions added yet. Click + Add question to create one.</div>'}<button class="add" onclick="addQuestion()">＋ Add question</button></div><div class="actions"><button class="secondary" onclick="go(2)">← Back</button><button class="primary" onclick="go(4)">Save & continue →</button><button class="secondary" onclick="localPreview(3)">Preview</button></div></section>`);
 p.push(`<section class="panel ${S.tab===4?'active':''}"><h2>💌 Personal Letter</h2><div class="hint">Just the heading and your letter. Nothing else.</div>${field('Letter heading','letterTitle')}${field('Your letter','letter','textarea')}<div class="actions"><button class="secondary" onclick="go(3)">← Back</button><button class="primary" onclick="go(5)">Save & continue →</button><button class="secondary" onclick="localPreview(4)">Preview</button></div></section>`);
 p.push(`<section class="panel ${S.tab===5?'active':''}"><h2>❤️ Final Scene</h2><div class="hint">The last message the recipient sees.</div>${field('Final message','final','textarea')}<div class="actions"><button class="secondary" onclick="go(4)">← Back</button><button class="primary" onclick="go(6)">Save & continue →</button><button class="secondary" onclick="localPreview(5)">Preview</button></div></section>`);
 p.push(`<section class="panel ${S.tab===6?'active':''}">
@@ -191,20 +191,69 @@ function go(i){
   });
 }
 function replayStory(){S.tab=0;tabs();panels();render(0);updateMobileProgress();requestAnimationFrame(()=>{const screen=document.querySelector('.screen');if(screen)screen.scrollTo({top:0,behavior:'auto'});})}
-function refreshBuilderSection(i){S.tab=i;tabs();panels();render(i);updateMobileProgress();requestAnimationFrame(()=>{const p=document.getElementById('panels');if(p)p.scrollTop=p.scrollTop;});}
-function addPhotos(files){[...files].forEach(f=>{let r=new FileReader();r.onload=e=>{S.photos.push(e.target.result);refreshBuilderSection(2)};r.readAsDataURL(f)})}
-function removeGalleryPhoto(i){if(i<0||i>=S.photos.length)return;S.photos.splice(i,1);refreshBuilderSection(2)}
-function addMemory(){S.memories.push({date:'',title:'',text:'',photo:''});refreshBuilderSection(2);requestAnimationFrame(()=>{const p=document.getElementById('panels');if(p)p.scrollTop=p.scrollHeight;});}
-function addMemoryPhoto(files,i){let f=files&&files[0];if(!f)return;let r=new FileReader();r.onload=e=>{if(S.memories[i])S.memories[i].photo=e.target.result;refreshBuilderSection(2)};r.readAsDataURL(f)}
-function removeMemoryPhoto(i){if(S.memories[i]){S.memories[i].photo='';refreshBuilderSection(2)}}
-function removeMemory(i){if(i<0||i>=S.memories.length)return;if(S.memories.length===1){S.memories[0]={date:'',title:'',text:'',photo:''};}else{S.memories.splice(i,1)}refreshBuilderSection(2)}
-function addQuestion(){S.questions.push({type:'multiple',q:'',opts:['',''],ans:0,answers:[]});S.quizAnswers={};S.quizPassed=false;refreshBuilderSection(3);requestAnimationFrame(()=>{const p=document.getElementById('panels');if(p)p.scrollTop=p.scrollHeight;});}
-function removeQuestion(i){if(i<0||i>=S.questions.length)return;S.questions.splice(i,1);S.quizAnswers={};S.quizPassed=false;refreshBuilderSection(3)}
+function refreshBuilderSection(i,opts={}){
+  const oldPanels=document.getElementById('panels');
+  const oldScroll=oldPanels?oldPanels.scrollTop:0;
+  S.tab=i;
+  tabs();
+  panels();
+  render(i);
+  updateMobileProgress();
+  requestAnimationFrame(()=>{
+    const p=document.getElementById('panels');
+    if(!p)return;
+    if(opts.scrollBottom)p.scrollTop=p.scrollHeight;
+    else p.scrollTop=Math.min(oldScroll,p.scrollHeight);
+  });
+}
+function addPhotos(files){
+  const list=[...files].filter(f=>f&&f.type&&f.type.startsWith('image/'));
+  list.forEach(f=>{let r=new FileReader();r.onload=e=>{S.photos.push(e.target.result);refreshBuilderSection(2)};r.readAsDataURL(f)});
+}
+function removeGalleryPhoto(i){
+  if(i<0||i>=S.photos.length)return;
+  S.photos.splice(i,1);
+  refreshBuilderSection(2);
+}
+function addMemory(){
+  S.memories.push({date:'',title:'',text:'',photo:''});
+  refreshBuilderSection(2,{scrollBottom:true});
+}
+function addMemoryPhoto(files,i){
+  let f=files&&files[0];
+  if(!f||!f.type.startsWith('image/')||!S.memories[i])return;
+  let r=new FileReader();
+  r.onload=e=>{if(S.memories[i]){S.memories[i].photo=e.target.result;refreshBuilderSection(2)}};
+  r.readAsDataURL(f);
+}
+function removeMemoryPhoto(i){
+  if(i<0||i>=S.memories.length)return;
+  S.memories[i].photo='';
+  refreshBuilderSection(2);
+}
+function removeMemory(i){
+  if(i<0||i>=S.memories.length)return;
+  S.memories.splice(i,1);
+  refreshBuilderSection(2);
+}
+function addQuestion(){
+  S.questions.push({type:'multiple',q:'',opts:['',''],ans:0,answers:[]});
+  S.quizAnswers={};
+  S.quizPassed=false;
+  refreshBuilderSection(3,{scrollBottom:true});
+}
+function removeQuestion(i){
+  if(i<0||i>=S.questions.length)return;
+  S.questions.splice(i,1);
+  S.quizAnswers={};
+  S.quizPassed=false;
+  refreshBuilderSection(3);
+}
 function changeQuestionType(i,type){const q=S.questions[i];if(!q)return;q.type=type;if(type==='multiple'){q.opts=Array.isArray(q.opts)&&q.opts.length?q.opts:['',''];q.ans=Number.isFinite(Number(q.ans))?Number(q.ans):0;}else if(type==='truefalse'){q.ans=String(q.ans).toLowerCase()==='false'?'false':'true';}else{q.answers=Array.isArray(q.answers)&&q.answers.length?q.answers:(q.ans!==undefined&&q.ans!==''?[String(q.ans)]:['']);q.ans=q.answers[0]||'';}S.quizAnswers={};S.quizPassed=false;refreshBuilderSection(3)}
 function updateMemoryField(i,key,value){if(S.memories[i])S.memories[i][key]=value}
 function updateQuestionField(i,key,value){if(S.questions[i])S.questions[i][key]=value}
 function updateFlirtyLine(i,value){if(S.flirt[i]!==undefined)S.flirt[i]=value}
-function removeFlirtyLine(i){if(i<0||i>=S.flirt.length)return;if(S.flirt.length===1)S.flirt[0]='';else S.flirt.splice(i,1);refreshBuilderSection(0)}
+function removeFlirtyLine(i){if(i<0||i>=S.flirt.length)return;S.flirt.splice(i,1);refreshBuilderSection(0)}
 function updateQuestionOptions(i,value){if(S.questions[i])S.questions[i].opts=value.split(/\r?\n/)}
 function updateQuestionNumberAnswer(i,value){if(S.questions[i])S.questions[i].ans=Math.max(0,Number(value||1)-1)}
 function updateAcceptedAnswers(i,value){if(S.questions[i]){S.questions[i].answers=value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);S.questions[i].ans=S.questions[i].answers[0]||''}}
