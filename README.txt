@@ -1,14 +1,15 @@
-AnniverCard short-link build
-=============================
+AnniverCard — Netlify-only short links
 
-Files:
-- index.html       existing 7-template builder + online short-link system
-- supabase.sql     database/storage setup
-- SETUP.md         step-by-step setup
-- _redirects       Netlify routing for /t/... and /c/...
+This version removes the Supabase dependency for receiver links.
 
-Template URL:
-  /t/anniversary
+Deployment:
+1. Upload these files to the same GitHub repository currently connected to Netlify.
+2. Netlify will install @netlify/blobs and deploy the two Functions.
+3. The creator uses Generate receiver link. The result is /c/7CHARID.
+4. The recipient URL loads the saved card from Netlify Blobs.
 
-Receiver URL:
-  /c/XXXXXXX
+Notes:
+- Images/audio are uploaded individually to Netlify Blobs.
+- For this prototype, each individual media file should be under about 4 MB.
+- The card data itself is stored as JSON in Netlify Blobs.
+- Supabase is not required by this version.
