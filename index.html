@@ -398,26 +398,52 @@ function decodeReceiverState(token){
     return JSON.parse(new TextDecoder().decode(bytes));
   }catch(e){return null}
 }
-async function uploadNetlifyMedia(dataUrl){
+async function uploadNetlifyMedia(dataUrl,onProgress){
   if(!dataUrl || !String(dataUrl).startsWith('data:')) return dataUrl;
   const m=String(dataUrl).match(/^data:([^;,]+)(?:;[^,]*)?,(.*)$/s);
   if(!m) return dataUrl;
   const mime=m[1] || 'application/octet-stream';
-  const binary=atob(m[2]);
+  let binary;
+  try{binary=atob(m[2]);}catch(e){throw new Error('Could not read one of the selected media files.');}
   const bytes=new Uint8Array(binary.length);
   for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
   const key=crypto.randomUUID().replace(/-/g,'')+Math.random().toString(36).slice(2,8);
-  const r=await fetch('/api/media/'+key,{method:'POST',headers:{'Content-Type':mime},body:bytes});
-  if(!r.ok) throw new Error(await r.text() || 'Media upload failed');
-  return '/api/media/'+key;
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),30000);
+  try{
+    onProgress?.('Uploading media…');
+    const r=await fetch('/api/media/'+key,{method:'POST',headers:{'Content-Type':mime,'Cache-Control':'no-cache'},body:bytes,signal:controller.signal});
+    if(!r.ok) throw new Error((await r.text()) || ('Media upload failed ('+r.status+')'));
+    onProgress?.('Media uploaded');
+    return '/api/media/'+key;
+  }catch(e){
+    if(e?.name==='AbortError') throw new Error('A media upload timed out after 30 seconds. Please try again.');
+    throw e;
+  }finally{clearTimeout(timer)}
 }
-async function prepareNetlifyPayload(){
+async function prepareNetlifyPayload(progress){
   const payload=JSON.parse(JSON.stringify({...S,tab:0,quizAnswers:{},quizPassed:false}));
-  if(Array.isArray(payload.photos)) payload.photos=await Promise.all(payload.photos.map(uploadNetlifyMedia));
-  if(Array.isArray(payload.memories)){
-    for(const m of payload.memories){ if(m && m.photo) m.photo=await uploadNetlifyMedia(m.photo); }
+  const jobs=[];
+  if(Array.isArray(payload.photos)){
+    payload.photos.forEach((photo,i)=>{
+      if(photo) jobs.push({label:'Gallery photo '+(i+1),run:async()=>{payload.photos[i]=await uploadNetlifyMedia(photo,()=>progress?.('Uploading gallery photo '+(i+1)+'…'))}});
+    });
   }
-  if(payload.voiceNote) payload.voiceNote=await uploadNetlifyMedia(payload.voiceNote);
+  if(Array.isArray(payload.memories)){
+    payload.memories.forEach((m,i)=>{
+      if(m && m.photo) jobs.push({label:'Memory photo '+(i+1),run:async()=>{m.photo=await uploadNetlifyMedia(m.photo,()=>progress?.('Uploading memory photo '+(i+1)+'…'))}});
+    });
+  }
+  if(payload.voiceNote) jobs.push({label:'Voice message',run:async()=>{payload.voiceNote=await uploadNetlifyMedia(payload.voiceNote,()=>progress?.('Uploading voice message…'))}});
+  let done=0;
+  const total=jobs.length;
+  if(!total){progress?.('No media to upload. Creating your link…');return payload;}
+  progress?.('Uploading 0 of '+total+' media files…');
+  await Promise.all(jobs.map(async job=>{
+    await job.run();
+    done++;
+    progress?.('Uploading '+done+' of '+total+' media files…');
+  }));
   return payload;
 }
 function makeCardId(){
@@ -428,17 +454,30 @@ function makeCardId(){
 async function generateReceiverLink(){
   const result=document.getElementById('receiverLinkResult');
   if(!result)return;
-  result.innerHTML='<div class="mini">⏳ Uploading your photos/audio and creating the private card link…</div>';
+  const btn=document.querySelector('.receiver-link-card button.primary');
+  if(btn){btn.disabled=true;btn.textContent='⏳ Creating link…';}
+  result.innerHTML='<div class="mini">⏳ Preparing your card…</div>';
   try{
     const id=makeCardId();
-    const payload=await prepareNetlifyPayload();
-    const r=await fetch('/api/cards/'+id,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload})});
-    if(!r.ok) throw new Error(await r.text() || 'Could not save card');
+    const payload=await prepareNetlifyPayload(msg=>{result.innerHTML='<div class="mini">⏳ '+esc(msg)+'</div>';});
+    result.innerHTML='<div class="mini">⏳ Saving your card online…</div>';
+    const controller=new AbortController();
+    const timer=setTimeout(()=>controller.abort(),30000);
+    let r;
+    try{
+      r=await fetch('/api/cards/'+id,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({payload}),signal:controller.signal});
+    }catch(e){
+      if(e?.name==='AbortError') throw new Error('Saving the card timed out after 30 seconds. Please try again.');
+      throw e;
+    }finally{clearTimeout(timer)}
+    if(!r.ok) throw new Error(await r.text() || ('Could not save card ('+r.status+')'));
     const link=location.origin+'/c/'+id;
     result.innerHTML=`<input id="receiverLinkInput" readonly value="${esc(link)}"><button class="secondary" type="button" onclick="copyReceiverLink()">📋 Copy receiver link</button><div class="mini" style="margin-top:6px">✓ Saved online. The receiver link opens only the finished card.</div>`;
   }catch(e){
     console.error(e);
-    result.innerHTML=`<div class="mini" style="color:#a51f45">❌ ${esc(e.message||'Could not create receiver link')}</div>`;
+    result.innerHTML=`<div class="mini" style="color:#a51f45">❌ ${esc(e.message||'Could not create receiver link')}</div><button class="secondary" type="button" onclick="generateReceiverLink()" style="margin-top:8px">↻ Try again</button>`;
+  }finally{
+    if(btn){btn.disabled=false;btn.textContent='🔗 Generate receiver link';}
   }
 }
 function copyReceiverLink(){
