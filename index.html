@@ -87,6 +87,22 @@ input,textarea,select{width:100%;border:1px solid #dfcbd3;border-radius:12px;pad
 <style id="mobile-builder-layer">
 html,body{background:radial-gradient(circle at 50% 0%,#5a1f38,#160914 75%);min-height:100%;margin:0}.mobile-builder-shell{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;box-sizing:border-box}.mobile-phone{width:min(430px,96vw);height:min(900px,94vh);min-height:650px;border:10px solid #171118;border-radius:42px;background:#09070a;box-shadow:0 30px 90px #000b,0 0 0 2px #ffffff18;overflow:hidden;position:relative;display:flex;flex-direction:column}.mobile-phone-top{height:42px;flex:0 0 42px;background:#171018;color:#fff;display:flex;align-items:center;justify-content:space-between;padding:0 17px;font-weight:900;font-size:13px;box-sizing:border-box}.mobile-live{font-size:10px;color:#ff9fbd;letter-spacing:.8px}.mobile-modebar{display:flex;gap:6px;padding:8px;background:#24131d;border-bottom:1px solid #ffffff12}.modebtn{flex:1;border:0;border-radius:12px;padding:9px 8px;background:#ffffff0d;color:#f7dce6;font-weight:900;cursor:pointer}.modebtn.active{background:#d92f73;color:#fff}.mobile-builder-view,.mobile-card-view{flex:1;min-height:0;overflow:hidden}.mobile-builder-view{display:flex;flex-direction:column;background:#fff5f8;color:#381526}.mobile-progress{font-size:11px;font-weight:900;color:#8b4a61;text-align:center;padding:8px 10px 3px;background:#fff5f8}.mobile-tabs-wrap{overflow-x:auto;background:#fff5f8;border-bottom:1px solid #ead6de;scrollbar-width:none}.mobile-tabs-wrap::-webkit-scrollbar{display:none}.mobile-tabs-wrap .tabs{display:flex;gap:6px;padding:7px 9px;width:max-content}.mobile-tabs-wrap .tab{border:0;border-radius:999px;background:#f2e2e8;color:#71354b;padding:7px 10px;font-size:11px;font-weight:900;white-space:nowrap;cursor:pointer}.mobile-tabs-wrap .tab.active{background:#d92f73;color:#fff}.mobile-builder-view #panels{flex:1;overflow:auto;padding:0 12px 24px;box-sizing:border-box}.mobile-builder-view .panel{padding:13px 2px 30px}.mobile-builder-view h2{font-size:20px;margin:3px 0 7px}.mobile-builder-view .hint{font-size:12px;line-height:1.45}.mobile-builder-view .field label{font-size:11px}.mobile-builder-view input,.mobile-builder-view textarea,.mobile-builder-view select{font-size:13px}.mobile-builder-view .actions{position:sticky;bottom:0;background:linear-gradient(transparent,#fff5f8 25%);padding-top:14px;z-index:4}.mobile-card-view{display:none;background:#100911}.phone-preview-inner{height:100%;position:relative}.phone-preview-inner .screen{height:100%;min-height:0;border-radius:0;overflow:auto}.mobile-card-view .mobile-template-nav{bottom:12px;right:10px}.mobile-card-view .mobile-template-nav button{font-size:11px;padding:8px 10px}@media(max-width:500px){.mobile-builder-shell{padding:0}.mobile-phone{width:100vw;height:100vh;min-height:0;border:0;border-radius:0}.mobile-phone-top{height:48px;flex-basis:48px}}
 </style>
+<style id="receiver-boot-hide">
+/* Receiver routes must never paint the editor while the card is being fetched. */
+html.receiver-route #builderView,
+html.receiver-route #mobileModeBar,
+html.receiver-route .mobile-modebar,
+html.receiver-route .mobile-phone-top { display:none !important; }
+html.receiver-route #cardView { display:block !important; }
+html.receiver-route .mobile-builder-shell { background:#100911; }
+</style>
+<script>
+(function(){
+  var p=location.pathname||'';
+  var receiver=/^\/c\/[A-Za-z0-9]{7}\/?$/.test(p) || location.hash.indexOf('#receiver=')===0;
+  if(receiver) document.documentElement.classList.add('receiver-route');
+})();
+</script>
 </head>
 <body>
 <div class="mobile-builder-shell">
