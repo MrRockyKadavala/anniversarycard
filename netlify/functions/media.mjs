@@ -13,62 +13,63 @@ function json(data, status = 200) {
 }
 
 export default async (req, context) => {
-  const key = context.params?.key || "";
+  const id = context.params?.id || "";
 
-  if (!key || !/^[A-Za-z0-9_-]{6,80}$/.test(key)) {
-    return json({ error: "Invalid media key" }, 400);
+  if (!id || !/^[A-Za-z0-9_-]{20,80}$/.test(id)) {
+    return json({ error: "Invalid media id" }, 400);
   }
 
-  if (req.method === "POST") {
-    const mime = req.headers.get("content-type") || "application/octet-stream";
-    const data = await req.arrayBuffer();
+  try {
+    if (req.method === "POST") {
+      const contentType = req.headers.get("content-type") || "application/octet-stream";
+      const body = await req.arrayBuffer();
 
-    if (!data || data.byteLength === 0) {
-      return json({ error: "Empty media" }, 400);
-    }
-
-    if (data.byteLength > 20 * 1024 * 1024) {
-      return json({ error: "Media file is too large" }, 413);
-    }
-
-    await store.set(key, data, {
-      metadata: {
-        contentType: mime
+      if (!body || body.byteLength === 0) {
+        return json({ error: "Empty media upload" }, 400);
       }
-    });
 
-    return json({ ok: true, key });
-  }
+      // Keep individual uploads within a conservative serverless request size.
+      if (body.byteLength > 20 * 1024 * 1024) {
+        return json({ error: "Media file is larger than 20 MB" }, 413);
+      }
 
-  if (req.method === "GET") {
-    const entry = await store.getWithMetadata(key, {
-      type: "arrayBuffer"
-    });
+      await store.set(id, body, {
+        metadata: {
+          contentType,
+          size: String(body.byteLength)
+        }
+      });
 
-    if (!entry) {
-      return new Response("Media not found", {
-        status: 404,
+      return json({ ok: true, id });
+    }
+
+    if (req.method === "GET") {
+      const entry = await store.getWithMetadata(id, { type: "arrayBuffer" });
+
+      if (!entry) {
+        return json({ error: "Media not found" }, 404);
+      }
+
+      const contentType = entry.metadata?.contentType || "application/octet-stream";
+      return new Response(entry.data, {
+        status: 200,
         headers: {
-          "content-type": "text/plain; charset=utf-8"
+          "content-type": contentType,
+          "cache-control": "public, max-age=31536000, immutable"
         }
       });
     }
 
-    const contentType =
-      entry.metadata?.contentType || "application/octet-stream";
-
-    return new Response(entry.data, {
-      status: 200,
-      headers: {
-        "content-type": contentType,
-        "cache-control": "public, max-age=31536000, immutable"
-      }
-    });
+    return json({ error: "Method not allowed" }, 405);
+  } catch (error) {
+    console.error("AnniverCard media function error:", error);
+    return json({
+      error: "Media storage failed",
+      detail: error?.message || String(error)
+    }, 500);
   }
-
-  return json({ error: "Method not allowed" }, 405);
 };
 
 export const config = {
-  path: "/api/media/:key"
+  path: "/api/media/:id"
 };
